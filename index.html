@@ -390,7 +390,16 @@ section { padding: 64px 0; }
   text-align: center; font-size: .75rem; color: var(--text-muted);
   margin: -12px 0 24px; letter-spacing: .02em;
 }
-.comp-card .comp-title { font-size: .9rem; font-weight: 700; color: var(--brown); margin-bottom: 10px; }
+.comp-card .comp-title { font-size: .9rem; font-weight: 700; color: var(--brown); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.comp-card a.yt-btn {
+  flex-shrink: 0; font-size: .65rem; font-weight: 600;
+  padding: 2px 8px; border-radius: 999px;
+  background: #c4302b; color: #fff;
+  text-decoration: none;
+  transition: transform 150ms var(--spring);
+}
+.comp-card a.yt-btn:hover { transform: scale(1.07); }
+.comp-card a.yt-btn:active { transform: scale(0.94); }
 .comp-row { font-size: .76rem; color: var(--text-sub); margin-bottom: 5px; line-height: 1.4; }
 .comp-row b { color: var(--brown); }
 .pro-con { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; flex: 1; }
@@ -729,10 +738,18 @@ footer .heart { color: var(--coral); }
   .day-body { padding: 20px 16px; }
   .tl-items { padding-left: 44px; }
   .meals-grid { grid-template-columns: 1fr 1fr; }
-  .comparison-grid { grid-template-columns: 1fr; }
+  .comparison-grid {
+    grid-template-columns: repeat(3, 80vw);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+  .comparison-grid::-webkit-scrollbar { display: none; }
+  .comp-card { scroll-snap-align: start; padding: 14px; }
   .tabs-nav { gap: 4px; }
   .tab-btn { padding: 10px 14px; font-size: .78rem; min-height: 44px; }
-  .comp-card { padding: 14px; }
 }
 @media (max-width: 400px) {
   .meals-grid { grid-template-columns: 1fr; }
@@ -1090,7 +1107,7 @@ footer .heart { color: var(--coral); }
           <!-- Comparison cards -->
           <div class="comparison-grid">
             <div class="comp-card option-a" onclick="switchOption(0)">
-              <div class="comp-title">🌊 方案 A：明石 × 神戶</div>
+              <div class="comp-title">🌊 方案 A：明石 × 神戶 <a class="yt-btn" href="https://youtu.be/pyO-PtvxV2E?si=YS-NtK71dSbGjb8F" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">▶ YT</a></div>
               <div class="comp-row"><b>氛圍</b> 海景・港灣・西洋感</div>
               <div class="comp-row"><b>人潮</b> 適中，舒適</div>
               <div class="comp-row"><b>必吃</b> 明石燒・神戶牛</div>
@@ -1101,7 +1118,7 @@ footer .heart { color: var(--coral); }
               <div class="comp-budget">約 NT$5,777 <small style="font-size:.7em;font-weight:400;opacity:.7">2人合計</small></div>
             </div>
             <div class="comp-card option-b" onclick="switchOption(1)">
-              <div class="comp-title">👘 方案 B：京都和服</div>
+              <div class="comp-title">👘 方案 B：京都和服 <a class="yt-btn" href="https://youtu.be/MRibQuQlXbM?si=-7t3jivXjLTdpSGI" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">▶ YT</a></div>
               <div class="comp-row"><b>氛圍</b> 傳統古都・典雅</div>
               <div class="comp-row"><b>人潮</b> 極高，週日爆滿</div>
               <div class="comp-row"><b>必吃</b> 抹茶甜點・錦市場小吃</div>
@@ -1112,7 +1129,7 @@ footer .heart { color: var(--coral); }
               <div class="comp-budget">約 NT$7,457 <small style="font-size:.7em;font-weight:400;opacity:.7">2人合計</small></div>
             </div>
             <div class="comp-card option-c" onclick="switchOption(2)">
-              <div class="comp-title">🐱 方案 C：和歌山</div>
+              <div class="comp-title">🐱 方案 C：和歌山 <a class="yt-btn" href="https://youtu.be/nbK1ohA947U?si=BvQXIOKCHtZdI8Mw" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">▶ YT</a></div>
               <div class="comp-row"><b>氛圍</b> 貓咪萌系・海鮮市場</div>
               <div class="comp-row"><b>人潮</b> 適中，悠哉</div>
               <div class="comp-row"><b>必訪</b> 貓站長・主題電車・黑潮市場</div>
@@ -1240,7 +1257,7 @@ footer .heart { color: var(--coral); }
                 <div class="tl-period"><div class="period-dot">🐱</div>上午</div>
                 <div class="tl-items">
                   <div class="tl-item">
-                    <div class="tl-item-name"><span class="tl-time">10:00</span>🚃 貴志川線貓咪電車 <span class="tl-btns"><a class="map-btn" href="https://maps.google.com/?q=和歌山電鐵貴志川線+和歌山駅" target="_blank" rel="noopener noreferrer">導航</a><a class="map-btn yt-btn" href="https://youtu.be/nbK1ohA947U?si=BvQXIOKCHtZdI8Mw" target="_blank" rel="noopener noreferrer">▶ YT</a></span></div>
+                    <div class="tl-item-name"><span class="tl-time">10:00</span>🚃 貴志川線貓咪電車 <a class="map-btn" href="https://maps.google.com/?q=和歌山電鐵貴志川線+和歌山駅" target="_blank" rel="noopener noreferrer">導航</a></div>
                     <div class="tl-item-meta">
                       <div class="meta-row">🚆 天王寺 → 和歌山站，JR 特急 Kuroshio，50 分鐘，¥2,290（NT$458）/人</div>
                       <div class="meta-row">🚋 和歌山站 → 貴志站，和歌山電鐵，30 分鐘，¥370（NT$74）/人</div>
