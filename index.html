@@ -1840,8 +1840,9 @@ function switchTab(idx) {
   panels[idx].classList.add('active');
   // Scroll active button into view in nav
   tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  // Scroll page to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Scroll to tabs nav so content is visible below it
+  const navTop = document.querySelector('.tabs-nav-wrapper').getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top: navTop, behavior: 'smooth' });
 }
 
 // ── Keyboard navigation for tabs ──
