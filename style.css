@@ -206,15 +206,31 @@ section { padding: 64px 0; }
   box-shadow: 0 4px 14px rgba(153,70,58,.4);
 }
 .tab-panel { display: none; }
-.tab-panel.active { display: block; animation: tabSlideInRight 240ms var(--ease-out) forwards; }
-.tab-panel.slide-back.active { animation-name: tabSlideInLeft; }
-@keyframes tabSlideInRight {
-  from { opacity: 0; transform: translateX(48px); }
+.tab-panel.active { display: block; animation: tabEnterRight 260ms var(--ease-out) forwards; }
+.tab-panel.go-back.active { animation-name: tabEnterLeft; }
+/* Outgoing panel: positioned absolutely so it overlaps during transition */
+.tab-panel.tab-leaving {
+  display: block;
+  position: absolute; top: 0; left: 0; right: 0;
+  pointer-events: none;
+  animation: tabExitLeft 260ms var(--ease-in) forwards;
+}
+.tab-panel.tab-leaving.go-back { animation-name: tabExitRight; }
+@keyframes tabEnterRight {
+  from { opacity: 0; transform: translateX(52px); }
   to   { opacity: 1; transform: translateX(0); }
 }
-@keyframes tabSlideInLeft {
-  from { opacity: 0; transform: translateX(-48px); }
+@keyframes tabEnterLeft {
+  from { opacity: 0; transform: translateX(-52px); }
   to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes tabExitLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-52px); }
+}
+@keyframes tabExitRight {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(52px); }
 }
 
 /* ── DAY CARD ── */
@@ -226,32 +242,30 @@ section { padding: 64px 0; }
 }
 .day-header {
   background: linear-gradient(135deg, var(--coral) 0%, var(--coral-dark) 100%);
-  padding: 24px 28px;
+  padding: 16px 20px;
   color: var(--white);
 }
+.day-header .day-num-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.day-header .day-num-row .day-cost-tag { margin-left: auto; }
 .day-header .day-num {
   font-size: .68rem; font-weight: 700;
   letter-spacing: .14em; text-transform: uppercase;
   color: rgba(255,255,255,.55); line-height: 1;
 }
 .day-header .day-title {
-  font-size: 1.2rem; font-weight: 700;
-  margin-top: 0;
+  font-size: 1.05rem; font-weight: 700;
+  margin-top: 4px;
 }
 .day-header .day-meta {
-  display: flex; gap: 16px; flex-wrap: wrap;
-  margin-top: 10px; font-size: .8rem;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 5px; font-size: .76rem;
   opacity: .85;
+  border-top: 1px solid rgba(255,255,255,.2);
+  padding-top: 5px;
 }
-.day-header-footer {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  margin-top: 10px;
-  border-top: 1px solid rgba(255,255,255,.25);
-  padding-top: 8px;
-}
-.day-header .day-weather {
-  font-size: .8rem; opacity: .8;
-}
+.day-header .day-weather { font-size: .75rem; opacity: .85; }
 .day-body { padding: 28px; }
 
 /* ── TIMELINE ── */
@@ -740,8 +754,11 @@ footer .heart { color: var(--coral); }
   border-radius: 999px;
   padding: 3px 10px 3px 8px;
   font-size: .68rem; font-weight: 500; color: var(--brown);
-  flex-wrap: wrap;
+  text-decoration: none;
 }
+a.meal-chip::after { content: ' ↗'; font-size: .6rem; opacity: .55; margin-left: 1px; }
+a.meal-chip:hover { background: rgba(196,168,130,.32); color: var(--brown); }
+a.meal-chip:active { transform: scale(0.97); }
 
 /* ── ALT NOTE ── */
 .alt-note {

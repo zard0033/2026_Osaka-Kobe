@@ -6,19 +6,30 @@ let currentTab = 0;
 function switchTab(idx) {
   if (idx === currentTab) return;
   const goingBack = idx < currentTab;
-  panels[currentTab].classList.remove('active', 'slide-back');
-  if (goingBack) {
-    panels[idx].classList.add('slide-back');
-  } else {
-    panels[idx].classList.remove('slide-back');
-  }
+
+  // Outgoing: keep visible as absolute overlay, slide out
+  const outgoing = panels[currentTab];
+  if (goingBack) outgoing.classList.add('go-back');
+  outgoing.classList.add('tab-leaving');
+  outgoing.classList.remove('active');
+  outgoing.addEventListener('animationend', () => {
+    outgoing.classList.remove('tab-leaving', 'go-back');
+  }, { once: true });
+
+  // Incoming: slide in from the opposite side
+  const incoming = panels[idx];
+  if (goingBack) incoming.classList.add('go-back');
+  incoming.classList.add('active');
+  incoming.addEventListener('animationend', () => {
+    incoming.classList.remove('go-back');
+  }, { once: true });
+
   tabBtns.forEach((b, i) => {
     b.classList.toggle('active', i === idx);
     b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
     b.setAttribute('tabindex', i === idx ? '0' : '-1');
   });
   currentTab = idx;
-  panels[idx].classList.add('active');
   tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
   window.scrollTo({ top: document.querySelector('.tabs-nav-wrapper').offsetTop, behavior: 'smooth' });
 }
