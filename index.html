@@ -206,18 +206,8 @@ section { padding: 64px 0; }
   font-size: .85rem; font-weight: 500;
   cursor: pointer;
   transition: all 220ms var(--ease-out);
-  position: relative; overflow: hidden;
+  box-shadow: none;
 }
-.tab-btn::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: var(--coral);
-  opacity: 0;
-  transition: opacity 200ms ease;
-  border-radius: 999px;
-  z-index: 0;
-}
-.tab-btn span { position: relative; z-index: 1; }
 .tab-btn:active { transform: scale(0.96); }
 .tab-btn.active {
   background: var(--coral);
@@ -258,11 +248,14 @@ section { padding: 64px 0; }
   margin-top: 10px; font-size: .8rem;
   opacity: .85;
 }
-.day-header .day-weather {
-  font-size: .8rem; opacity: .8;
-  margin-top: 6px;
+.day-header-footer {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-top: 10px;
   border-top: 1px solid rgba(255,255,255,.25);
   padding-top: 8px;
+}
+.day-header .day-weather {
+  font-size: .8rem; opacity: .8;
 }
 .day-body { padding: 28px; }
 
@@ -309,17 +302,12 @@ section { padding: 64px 0; }
 .tl-item-name a.map-btn {
   flex-shrink: 0;
   font-size: .7rem; font-weight: 500;
-  padding: 5px 12px; border-radius: 999px;
-  min-height: 30px;
-  display: inline-flex; align-items: center;
+  padding: 6px 16px; border-radius: 999px;
+  display: inline-flex; align-items: center; line-height: 1;
   background: var(--coral); color: var(--white);
   transition: transform 200ms var(--spring), box-shadow 200ms ease;
 }
 @media (pointer: coarse) {
-  .tl-item-name a.map-btn,
-  .tl-item-name a.yt-btn,
-  .meal-card a.map-btn,
-  .meal-card .meal-actions a.map-btn,
   .comp-card a.yt-btn {
     min-height: 44px;
     padding-left: 14px;
@@ -347,49 +335,19 @@ section { padding: 64px 0; }
 }
 .meta-row a:hover { text-decoration-color: var(--coral-dark); }
 
-/* ── MEALS ── */
-.meals-section { margin-top: 28px; }
-.meals-title {
-  font-size: .8rem; font-weight: 700; letter-spacing: .08em;
-  color: var(--text-muted); text-transform: uppercase;
-  margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
+/* ── MEAL ITEMS (inline in timeline) ── */
+.tl-meal {
+  background: rgba(153,70,58,.04);
+  border-style: dashed;
 }
-.meals-title::before, .meals-title::after {
-  content: ''; flex: 1; height: 1px; background: var(--brown-pale);
-}
-.meals-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-.meal-card {
-  background: var(--cream);
-  border: 1px solid var(--brown-pale);
-  border-radius: var(--r-md);
-  padding: 14px;
-  transition: transform 200ms var(--ease-out);
-}
-.meal-card:hover { transform: translateY(-2px); }
-.meal-card .meal-type {
-  font-size: .68rem; font-weight: 700; letter-spacing: .06em;
-  color: var(--coral); text-transform: uppercase; margin-bottom: 6px;
-}
-.meal-card .meal-name { font-size: .88rem; font-weight: 600; color: var(--brown); }
-.meal-card .meal-desc { font-size: .75rem; color: var(--text-sub); margin-top: 3px; line-height: 1.45; }
-.meal-card .meal-price {
-  margin-top: 8px; font-size: .75rem; font-weight: 600;
+.tl-meal .tl-item-name { font-size: .88rem; }
+.tl-meal .meal-label {
+  font-size: .62rem; font-weight: 700; letter-spacing: .04em;
   color: var(--coral-dark);
-  background: rgba(153,70,58,.1);
-  padding: 3px 8px; border-radius: 4px; display: inline-block;
+  background: rgba(153,70,58,.12);
+  padding: 2px 7px; border-radius: 999px;
+  flex-shrink: 0;
 }
-.meal-card .meal-name {
-  display: flex; align-items: center; justify-content: space-between; gap: 6px;
-}
-.meal-card a.map-btn {
-  flex-shrink: 0; font-size: .65rem; font-weight: 500;
-  padding: 2px 8px; border-radius: 999px;
-  background: var(--coral); color: var(--white);
-  transition: transform 150ms var(--spring);
-}
-.meal-card a.map-btn:hover { transform: scale(1.07); }
-.meal-card a.map-btn:active { transform: scale(0.94); }
 
 /* ── DAY COST BAR ── */
 .day-cost-bar {
@@ -428,31 +386,22 @@ section { padding: 64px 0; }
   align-items: stretch;
 }
 .comp-card {
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   padding: 18px;
-  border: 2px solid transparent;
+  border: 1.5px solid transparent;
   cursor: pointer;
   transition: all 200ms var(--ease-out);
   display: flex; flex-direction: column;
 }
-.comp-card.option-a { background: #EEF6FF; border-color: #A8CFEE; }
-.comp-card.option-b { background: #FFF0EE; border-color: var(--coral-light); }
-.comp-card.option-c { background: #F0F8F0; border-color: #A8D4A8; }
-.comp-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+.comp-card.option-a { background: #EEF6FF; border-color: rgba(168,207,238,.55); }
+.comp-card.option-b { background: #FFF0EE; border-color: rgba(196,168,130,.45); }
+.comp-card.option-c { background: #F0F8F0; border-color: rgba(168,212,168,.55); }
+.comp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .comp-card:active { transform: scale(0.98); }
-.comp-card.selected { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-.comp-card.selected.option-a { border-color: #4A90C4; border-width: 2.5px; }
-.comp-card.selected.option-b { border-color: var(--coral); border-width: 2.5px; }
-.comp-card.selected.option-c { border-color: #5A9E5A; border-width: 2.5px; }
-.comp-card::after {
-  content: '點我選擇';
-  display: block; font-size: .65rem;
-  color: var(--text-muted); text-align: right;
-  margin-top: 8px; opacity: 0;
-  transition: opacity 200ms ease;
-}
-.comp-card:hover::after { opacity: 1; }
-.comp-card.selected::after { content: '✓ 已選擇'; color: var(--coral); opacity: 1; }
+.comp-card.selected { box-shadow: var(--shadow-md); }
+.comp-card.selected.option-a { border-color: #4A90C4; border-width: 3px; }
+.comp-card.selected.option-b { border-color: var(--coral); border-width: 3px; }
+.comp-card.selected.option-c { border-color: #5A9E5A; border-width: 3px; }
 .comp-dots {
   display: none; justify-content: center; gap: 8px;
   margin: 6px 0 20px;
@@ -517,18 +466,6 @@ section { padding: 64px 0; }
   .comp-card > .comp-budget { padding: 8px 16px 16px; border-top: 1px solid rgba(0,0,0,.06); margin-top: 0; }
 }
 
-/* ── MEAL CARD BTNS (多按鈕修正) ── */
-.meal-card .meal-actions {
-  display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;
-}
-.meal-card .meal-actions a.map-btn {
-  flex-shrink: 0; font-size: .65rem; font-weight: 500;
-  padding: 2px 8px; border-radius: 999px;
-  background: var(--coral); color: var(--white);
-  transition: transform 150ms var(--spring);
-}
-.meal-card .meal-actions a.map-btn:hover { transform: scale(1.07); }
-.meal-card .meal-actions a.map-btn:active { transform: scale(0.94); }
 
 /* ── COST SECTION ── */
 .cost-section { background: var(--cream); }
@@ -779,6 +716,7 @@ footer .heart { color: var(--coral); }
 .shop-chip:hover { transform: translateY(-2px); box-shadow: var(--shadow-xs); color: var(--coral-dark); }
 .shop-chip:active { transform: scale(0.96); }
 .shop-chip .chip-icon { font-size: .88rem; }
+.shop-chip::after { content: '↗'; font-size: .6rem; opacity: .5; margin-left: 2px; vertical-align: middle; }
 
 /* ── SPOT FEATURE TAG ── */
 .spot-feature {
@@ -848,14 +786,13 @@ footer {
   .ov-stats { grid-template-columns: repeat(2, 1fr); }
   .day-body { padding: 20px 16px; }
   .tl-items { padding-left: 44px; }
-  .meals-grid { grid-template-columns: 1fr 1fr; }
   .comparison-grid {
-    grid-template-columns: repeat(3, 100%);
-    column-gap: 0;
+    grid-template-columns: repeat(3, 88%);
+    column-gap: 10px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
+    padding: 0 6% 4px;
     margin-bottom: 12px;
     scrollbar-width: none;
     touch-action: pan-x pan-y;
@@ -864,7 +801,7 @@ footer {
   .comp-card {
     scroll-snap-align: center;
     scroll-snap-stop: always;
-    padding: 16px;
+    padding: 14px;
   }
   .comp-dots {
     display: flex; justify-content: center; gap: 8px;
@@ -887,7 +824,6 @@ footer {
 }
 @media (max-width: 450px) {
   .tl-items { padding-left: 46px; }
-  .meals-grid { grid-template-columns: 1fr; }
   .tab-btn { padding: 10px 12px; font-size: .76rem; }
   .hero-meta { gap: 12px; }
 }
@@ -926,10 +862,6 @@ footer {
       <span class="label">天數</span>
       <span class="val">6 天 5 夜</span>
     </div>
-    <div class="hero-meta-item">
-      <span class="label">旅伴</span>
-      <span class="val">2 人</span>
-    </div>
   </div>
   <div class="hero-scroll" aria-hidden="true">
     <span class="hero-scroll-label">向下滑動</span>
@@ -962,10 +894,6 @@ footer {
           <div class="ov-stat">
             <div class="ov-val">6天5夜</div>
             <div class="ov-key">旅遊天數</div>
-          </div>
-          <div class="ov-stat">
-            <div class="ov-val">2 人</div>
-            <div class="ov-key">同行人數</div>
           </div>
           <div class="ov-stat ov-stat-hi">
             <div class="ov-val">NT$83,616</div>
@@ -1146,10 +1074,12 @@ footer {
             <div class="day-title">心齋橋潮流開場</div>
             <div class="day-meta">
               <span>✈️ CX564 抵達 KIX 14:50</span>
-              <span class="day-cost-tag">NT$8,605（2人）</span>
             </div>
           </div>
-          <div class="day-weather">👗 5月大阪 20–26°C，輕便休閒，帶一件薄外套</div>
+          <div class="day-header-footer">
+            <span class="day-cost-tag">NT$8,605（2人）</span>
+            <span class="day-weather">👗 5月大阪 20–26°C，輕便休閒，帶一件薄外套</span>
+          </div>
         </div>
         <div class="day-body">
           <div class="timeline">
@@ -1195,6 +1125,17 @@ footer {
                     <div class="meta-row">⏱ 2–3 小時</div>
                   </div>
                 </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">下午點心</span>
+                    🍔 Shake Shack 心齋橋店
+                    <a class="map-btn" href="https://maps.google.com/?q=Shake+Shack+心斎橋+大阪" target="_blank" rel="noopener noreferrer">導航</a>
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">美式漢堡 + 薯條 + 奶昔，飛了一整天先補個滿</div>
+                    <div class="meta-row">¥1,500（NT$300）/人</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="tl-block">
@@ -1216,24 +1157,6 @@ footer {
             </div>
           </div>
 
-          <div class="meals-section">
-            <div class="meals-title">餐飲推薦</div>
-            <div class="meals-grid">
-              <div class="meal-card">
-                <div class="meal-type">下午點心</div>
-                <div class="meal-name">Shake Shack 心齋橋店 <a class="map-btn" href="https://maps.google.com/?q=Shake+Shack+心斎橋+大阪" target="_blank" rel="noopener noreferrer">導航</a></div>
-                <div class="meal-desc">美式漢堡 + 薯條 + 奶昔，飛了一整天先補個滿</div>
-                <div class="meal-price">¥1,500（NT$300）/人</div>
-              </div>
-              <div class="meal-card">
-                <div class="meal-type">晚餐</div>
-                <div class="meal-name">和牛燒肉 Maruyoshi <a class="map-btn" href="https://maps.google.com/?q=焼肉丸よし+谷町四丁目+大阪" target="_blank" rel="noopener noreferrer">導航</a></div>
-                <div class="meal-desc">霜降和牛套餐，現桌炭烤，A5 等級油花入口即化</div>
-                <div class="meal-price">¥6,000–8,000（NT$1,200–1,600）/人</div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
@@ -1250,10 +1173,12 @@ footer {
             <div class="day-title">自由選擇（三選一）</div>
             <div class="day-meta">
               <span>🗺️ 沛書來選今天要去哪！</span>
-              <span class="day-cost-tag">NT$5,777 起（2人）</span>
             </div>
           </div>
-          <div class="day-weather">👗 A/C 戶外建議運動鞋；B 和服體驗內著輕薄；全日備防曬乳</div>
+          <div class="day-header-footer">
+            <span class="day-cost-tag">NT$5,777 起（2人）</span>
+            <span class="day-weather">👗 A/C 戶外建議運動鞋；B 和服體驗內著輕薄；全日備防曬乳</span>
+          </div>
         </div>
         <div class="day-body">
           <!-- Comparison cards -->
@@ -1326,6 +1251,17 @@ footer {
                       <div class="meta-row">⏱ 30–45 分</div>
                     </div>
                   </div>
+                  <div class="tl-item tl-meal">
+                    <div class="tl-item-name">
+                      <span class="meal-label">午餐</span>
+                      🥚 魚之棚商店街老店
+                      <a class="map-btn" href="https://maps.google.com/?q=魚の棚商店街+明石市" target="_blank" rel="noopener noreferrer">導航</a>
+                    </div>
+                    <div class="tl-item-meta">
+                      <div class="meta-row">玉子燒（明石燒）蛋液軟嫩，配出汁湯底沾著吃</div>
+                      <div class="meta-row">¥1,000–1,500（NT$200–300）/人</div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="tl-block">
@@ -1354,17 +1290,21 @@ footer {
                       <div class="meta-row">⏱ 1.5–2 小時</div>
                     </div>
                   </div>
+                  <div class="tl-item tl-meal">
+                    <div class="tl-item-name">
+                      <span class="meal-label">晚餐</span>
+                      🍜 心齋橋 PARCO B2 食堂街
+                      <a class="map-btn" href="https://maps.google.com/?q=心斎橋PARCO+大阪市中央区" target="_blank" rel="noopener noreferrer">導航</a>
+                    </div>
+                    <div class="tl-item-meta">
+                      <div class="meta-row">各式料理齊聚，拉麵、居酒屋、定食都有得選</div>
+                      <div class="meta-row">¥2,500–3,500（NT$500–700）/人</div>
+                    </div>
+                  </div>
                   <div class="tl-item tl-item-return">
                     <div class="tl-item-name"><span class="tl-time">20:00</span>🏨 回飯店休息</div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="meals-section">
-              <div class="meals-title">餐飲推薦</div>
-              <div class="meals-grid">
-                <div class="meal-card"><div class="meal-type">午餐</div><div class="meal-name">魚之棚商店街老店 <a class="map-btn" href="https://maps.google.com/?q=魚の棚商店街+明石市" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">玉子燒（明石燒）蛋液軟嫩，配出汁湯底沾著吃</div><div class="meal-price">¥1,000–1,500（NT$200–300）/人</div></div>
-                <div class="meal-card"><div class="meal-type">晚餐</div><div class="meal-name">心齋橋 PARCO B2 食堂街 <a class="map-btn" href="https://maps.google.com/?q=心斎橋PARCO+大阪市中央区" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">各式料理齊聚，拉麵、居酒屋、定食都有得選</div><div class="meal-price">¥2,500–3,500（NT$500–700）/人</div></div>
               </div>
             </div>
           </div>
@@ -1423,6 +1363,16 @@ footer {
                       <div class="meta-row">⏱ 45–60 分</div>
                     </div>
                   </div>
+                  <div class="tl-item tl-meal">
+                    <div class="tl-item-name">
+                      <span class="meal-label">午餐</span>
+                      🍢 錦市場邊走邊吃
+                    </div>
+                    <div class="tl-item-meta">
+                      <div class="meta-row">湯葉・烤串・漬物・抹茶甜點，每攤嘗一口</div>
+                      <div class="meta-row">¥1,000–1,500（NT$200–300）/人</div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="tl-block">
@@ -1439,13 +1389,6 @@ footer {
                     <div class="tl-item-name"><span class="tl-time">21:00</span>🏨 回飯店休息</div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="meals-section">
-              <div class="meals-title">餐飲推薦</div>
-              <div class="meals-grid">
-                <div class="meal-card"><div class="meal-type">午餐</div><div class="meal-name">錦市場邊走邊吃 <a class="map-btn" href="https://maps.google.com/?q=錦市場+京都市" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">湯葉・烤串・漬物・抹茶甜點，每攤嘗一口</div><div class="meal-price">¥1,000–1,500（NT$200–300）/人</div></div>
-                <div class="meal-card"><div class="meal-type">晚餐</div><div class="meal-name">なぎかつ 厚切炸豬排 <a class="map-btn" href="https://maps.google.com/?q=なぎかつ+なんば+大阪" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">超厚切豬里脊，外皮酥脆肉汁噴發</div><div class="meal-price">¥1,800–2,500（NT$360–500）/人</div></div>
               </div>
             </div>
           </div>
@@ -1480,6 +1423,16 @@ footer {
                       <div class="meta-row">⏱ 1.5 小時</div>
                     </div>
                   </div>
+                  <div class="tl-item tl-meal">
+                    <div class="tl-item-name">
+                      <span class="meal-label">午餐</span>
+                      🦞 黑潮市場現烤海鮮
+                    </div>
+                    <div class="tl-item-meta">
+                      <div class="meta-row">現烤大扇貝、活魚、炭燒蝦，戶外豪邁吃</div>
+                      <div class="meta-row">¥3,000–5,000（NT$600–1,000）/人</div>
+                    </div>
+                  </div>
                   <div class="tl-item">
                     <div class="tl-item-name"><span class="tl-time">14:30</span>🏯 和歌山城 <a class="map-btn" href="https://maps.google.com/?q=和歌山城+和歌山市" target="_blank" rel="noopener noreferrer">導航</a></div>
                     <div class="tl-item-meta">
@@ -1489,17 +1442,21 @@ footer {
                       <div class="meta-row">⏱ 1 小時</div>
                     </div>
                   </div>
+                  <div class="tl-item tl-meal">
+                    <div class="tl-item-name">
+                      <span class="meal-label">晚餐</span>
+                      🍜 心齋橋 PARCO B2 食堂街
+                      <a class="map-btn" href="https://maps.google.com/?q=心斎橋PARCO+大阪市中央区" target="_blank" rel="noopener noreferrer">導航</a>
+                    </div>
+                    <div class="tl-item-meta">
+                      <div class="meta-row">各式拉麵、居酒屋、定食，回大阪再補一頓</div>
+                      <div class="meta-row">¥2,500–3,500（NT$500–700）/人</div>
+                    </div>
+                  </div>
                   <div class="tl-item tl-item-return">
                     <div class="tl-item-name"><span class="tl-time">20:30</span>🏨 回飯店休息</div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="meals-section">
-              <div class="meals-title">餐飲推薦</div>
-              <div class="meals-grid">
-                <div class="meal-card"><div class="meal-type">午餐</div><div class="meal-name">黑潮市場現烤海鮮 <a class="map-btn" href="https://maps.google.com/?q=黒潮市場+和歌山マリーナシティ" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">現烤大扇貝、活魚、炭燒蝦，戶外豪邁吃</div><div class="meal-price">¥3,000–5,000（NT$600–1,000）/人</div></div>
-                <div class="meal-card"><div class="meal-type">晚餐</div><div class="meal-name">心齋橋 PARCO B2 食堂街 <a class="map-btn" href="https://maps.google.com/?q=心斎橋PARCO+大阪市中央区" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">各式拉麵、居酒屋、定食，回大阪再補一頓</div><div class="meal-price">¥2,500–3,500（NT$500–700）/人</div></div>
               </div>
             </div>
           </div>
@@ -1517,11 +1474,11 @@ footer {
               <span class="day-date-big">5/18 <span class="day-date-dow">一</span></span>
             </div>
             <div class="day-title">雙神社 × 大阪靈魂散步</div>
-            <div class="day-meta">
-              <span class="day-cost-tag">NT$7,473（2人）</span>
-            </div>
           </div>
-          <div class="day-weather">👟 舒適步行鞋，全日走動約 8,000 步，帶傘備用</div>
+          <div class="day-header-footer">
+            <span class="day-cost-tag">NT$7,473（2人）</span>
+            <span class="day-weather">👟 舒適步行鞋，全日走動約 8,000 步，帶傘備用</span>
+          </div>
         </div>
         <div class="day-body">
           <div class="timeline">
@@ -1546,6 +1503,16 @@ footer {
                     <div class="meta-row">⏱ 1 小時</div>
                   </div>
                 </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">早餐</span>
+                    ☕ 飯店周邊咖啡館
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">輕食麵包或厚片吐司，簡單補個能量出發</div>
+                    <div class="meta-row">¥500（NT$100）/人</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="tl-block">
@@ -1560,6 +1527,31 @@ footer {
                       <a class="shop-chip" href="https://maps.google.com/?q=OS+drug+黒門市場+大阪市中央区" target="_blank" rel="noopener noreferrer"><span class="chip-icon">💊</span><span>OS Drug 黑門店・藥妝超便宜</span></a>
                     </div>
                     <div class="meta-row">⏱ 1 小時</div>
+                  </div>
+                </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">下午點心</span>
+                    🦪 黑門市場現食海鮮
+                    <a class="map-btn" href="https://maps.google.com/?q=黒門市場+大阪市中央区" target="_blank" rel="noopener noreferrer">導航</a>
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">現烤扇貝、生牡蠣、海膽軍艦，一路吃一路走</div>
+                    <div class="meta-row">¥1,000（NT$200）/人</div>
+                  </div>
+                </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">午餐・14:00</span>
+                    🐂 牛舌檸檬 日本橋店
+                    <span class="tl-btns">
+                      <a class="map-btn" href="https://maps.google.com/?q=牛たん炭焼+利久+日本橋+大阪" target="_blank" rel="noopener noreferrer">導航</a>
+                      <a class="map-btn" href="https://www.tablecheck.com/zh-TW/reservation/H92EGE" target="_blank" rel="noopener noreferrer">📅 訂位</a>
+                    </span>
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">超厚切炭燒牛舌定食，附麥飯和牛尾湯，份量扎實</div>
+                    <div class="meta-row">¥1,800–2,500（NT$360–500）/人</div>
                   </div>
                 </div>
                 <div class="tl-item">
@@ -1579,28 +1571,21 @@ footer {
                     <div class="meta-row">⏱ 1.5 小時</div>
                   </div>
                 </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">晚餐</span>
+                    🍢 新世界串炸 達摩
+                    <a class="map-btn" href="https://maps.google.com/?q=串かつだるま+新世界総本店+大阪市浪速区" target="_blank" rel="noopener noreferrer">導航</a>
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">炸串下鍋現炸，高麗菜絲搭著吃；沾醬桶只能沾一次，這是規矩</div>
+                    <div class="meta-row">¥2,000–3,000（NT$400–600）/人</div>
+                  </div>
+                </div>
                 <div class="tl-item tl-item-return">
                   <div class="tl-item-name"><span class="tl-time">19:30</span>🏨 回飯店休息</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="meals-section">
-            <div class="meals-title">餐飲推薦</div>
-            <div class="meals-grid">
-              <div class="meal-card"><div class="meal-type">早餐</div><div class="meal-name">飯店周邊咖啡館</div><div class="meal-desc">輕食麵包或厚片吐司，簡單補個能量出發</div><div class="meal-price">¥500（NT$100）/人</div></div>
-              <div class="meal-card">
-                <div class="meal-type">午餐・已訂位 14:00</div>
-                <div class="meal-name">牛舌檸檬 日本橋店</div>
-                <div class="meal-actions">
-                  <a class="map-btn" href="https://maps.google.com/?q=牛たん炭焼+利久+日本橋+大阪" target="_blank" rel="noopener noreferrer">導航</a>
-                  <a class="map-btn" href="https://www.tablecheck.com/zh-TW/reservation/H92EGE" target="_blank" rel="noopener noreferrer">📅 訂位</a>
-                </div>
-                <div class="meal-desc">超厚切炭燒牛舌定食，附麥飯和牛尾湯，份量扎實</div>
-                <div class="meal-price">¥1,800–2,500（NT$360–500）/人</div>
-              </div>
-              <div class="meal-card"><div class="meal-type">下午點心</div><div class="meal-name">黑門市場現食海鮮 <a class="map-btn" href="https://maps.google.com/?q=黒門市場+大阪市中央区" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">現烤扇貝、生牡蠣、海膽軍艦，一路吃一路走</div><div class="meal-price">¥1,000（NT$200）/人</div></div>
-              <div class="meal-card"><div class="meal-type">晚餐</div><div class="meal-name">新世界串炸 達摩 <a class="map-btn" href="https://maps.google.com/?q=串かつだるま+新世界総本店+大阪市浪速区" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">炸串下鍋現炸，高麗菜絲搭著吃；沾醬桶只能沾一次，這是規矩</div><div class="meal-price">¥2,000–3,000（NT$400–600）/人</div></div>
             </div>
           </div>
         </div>
@@ -1619,10 +1604,12 @@ footer {
             <div class="day-title">環球影城全日衝刺</div>
             <div class="day-meta">
               <span>🎢 USJ 全日</span>
-              <span class="day-cost-tag">NT$17,545（2人）</span>
             </div>
           </div>
-          <div class="day-weather">👟 運動鞋必備，帶防曬乳；水上設施可能噴濕，備換洗衣物</div>
+          <div class="day-header-footer">
+            <span class="day-cost-tag">NT$17,545（2人）</span>
+            <span class="day-weather">👟 運動鞋必備，帶防曬乳；水上設施可能噴濕，備換洗衣物</span>
+          </div>
         </div>
         <div class="day-body">
           <div class="timeline">
@@ -1639,19 +1626,50 @@ footer {
                     <div class="meta-row">⏱ 全天 8–10 小時</div>
                   </div>
                 </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">早餐</span>
+                    🏪 便利商店補給
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">飯糰＋咖啡＋三明治，不用吃太飽，進場有得吃</div>
+                    <div class="meta-row">¥500（NT$100）/人</div>
+                  </div>
+                </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">午餐</span>
+                    🍄 任天堂世界主題餐廳
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">Mario 主題造型餐點，食物有蘑菇、星星等遊戲元素</div>
+                    <div class="meta-row">¥2,000–2,500（NT$400–500）/人</div>
+                  </div>
+                </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">點心</span>
+                    🍺 奶油蟹膏・奶油啤酒・黃油玉米
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">奶油蟹膏是排隊必買、奶油啤酒甜但非喝不可</div>
+                    <div class="meta-row">¥1,500（NT$300）/人</div>
+                  </div>
+                </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">晚餐</span>
+                    🍱 Lawson 宵夜
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">親子丼便當、熱食炸雞、甜點，回飯店輕鬆補</div>
+                    <div class="meta-row">¥800–1,000（NT$160–200）/人</div>
+                  </div>
+                </div>
                 <div class="tl-item tl-item-return">
                   <div class="tl-item-name"><span class="tl-time">21:00</span>🏨 回飯店休息</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="meals-section">
-            <div class="meals-title">餐飲推薦</div>
-            <div class="meals-grid">
-              <div class="meal-card"><div class="meal-type">早餐</div><div class="meal-name">便利商店補給</div><div class="meal-desc">飯糰＋咖啡＋三明治，不用吃太飽，進場有得吃</div><div class="meal-price">¥500（NT$100）/人</div></div>
-              <div class="meal-card"><div class="meal-type">午餐</div><div class="meal-name">任天堂世界主題餐廳</div><div class="meal-desc">Mario 主題造型餐點，食物有蘑菇、星星等遊戲元素</div><div class="meal-price">¥2,000–2,500（NT$400–500）/人</div></div>
-              <div class="meal-card"><div class="meal-type">點心</div><div class="meal-name">奶油蟹膏・奶油啤酒・黃油玉米</div><div class="meal-desc">奶油蟹膏是排隊必買、奶油啤酒甜但非喝不可</div><div class="meal-price">¥1,500（NT$300）/人</div></div>
-              <div class="meal-card"><div class="meal-type">晚餐</div><div class="meal-name">Lawson 宵夜</div><div class="meal-desc">親子丼便當、熱食炸雞、甜點，回飯店輕鬆補</div><div class="meal-price">¥800–1,000（NT$160–200）/人</div></div>
             </div>
           </div>
         </div>
@@ -1670,10 +1688,12 @@ footer {
             <div class="day-title">玫瑰季 × 梅田採買 × 夕陽夜景</div>
             <div class="day-meta">
               <span>🌹 玫瑰盛開期</span>
-              <span class="day-cost-tag">NT$10,929（2人）</span>
             </div>
           </div>
-          <div class="day-weather">👗 適合拍照的輕鬆穿搭，玫瑰園日系風格很搭</div>
+          <div class="day-header-footer">
+            <span class="day-cost-tag">NT$10,929（2人）</span>
+            <span class="day-weather">👗 適合拍照的輕鬆穿搭，玫瑰園日系風格很搭</span>
+          </div>
         </div>
         <div class="day-body">
           <div class="timeline">
@@ -1687,6 +1707,16 @@ footer {
                     <div class="meta-row"><span class="spot-feature">🌹 4,000 株盛開</span><span class="spot-feature">📸 情侶拍照聖地</span><span class="spot-feature">🆓 免費入園</span></div>
                     <div class="meta-row note">📌 10:00 前光線最柔和、人最少</div>
                     <div class="meta-row">⏱ 1–1.5 小時</div>
+                  </div>
+                </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">早餐</span>
+                    ☕ 飯店周邊咖啡館
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">輕食早餐，早點出發搶玫瑰園最美光線</div>
+                    <div class="meta-row">¥800（NT$160）/人</div>
                   </div>
                 </div>
               </div>
@@ -1708,6 +1738,17 @@ footer {
                     <div class="meta-row">⏱ 3–4 小時</div>
                   </div>
                 </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">午餐</span>
+                    🍜 鴨蔥拉麵 梅田店
+                    <a class="map-btn" href="https://maps.google.com/?q=鴨to葱+梅田+大阪" target="_blank" rel="noopener noreferrer">導航</a>
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">鴨骨清爽高湯拉麵，蔥花大量，湯頭清甜不膩</div>
+                    <div class="meta-row">¥1,500–1,800（NT$300–360）/人</div>
+                  </div>
+                </div>
                 <div class="tl-item">
                   <div class="tl-item-name"><span class="tl-time">17:30</span>🌃 梅田藍天大廈・空中庭園 <a class="map-btn" href="https://maps.google.com/?q=梅田スカイビル+空中庭園展望台+大阪市北区" target="_blank" rel="noopener noreferrer">導航</a></div>
                   <div class="tl-item-meta">
@@ -1717,18 +1758,21 @@ footer {
                     <div class="meta-row">⏱ 1.5 小時</div>
                   </div>
                 </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">晚餐</span>
+                    🫕 肉のあさつ 梅田お初天神店
+                    <a class="map-btn" href="https://maps.app.goo.gl/JdMxwx3Lm6DUeq7Q8" target="_blank" rel="noopener noreferrer">導航</a>
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">黃金出汁涮涮鍋，和牛薄切片下鍋一熟即撈，附江戶前壽司</div>
+                    <div class="meta-row">¥4,000–6,000（NT$800–1,200）/人</div>
+                  </div>
+                </div>
                 <div class="tl-item tl-item-return">
                   <div class="tl-item-name"><span class="tl-time">22:00</span>🏨 回飯店休息</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="meals-section">
-            <div class="meals-title">餐飲推薦</div>
-            <div class="meals-grid">
-              <div class="meal-card"><div class="meal-type">早餐</div><div class="meal-name">飯店周邊咖啡館</div><div class="meal-desc">輕食早餐，早點出發搶玫瑰園最美光線</div><div class="meal-price">¥800（NT$160）/人</div></div>
-              <div class="meal-card"><div class="meal-type">午餐</div><div class="meal-name">鴨蔥拉麵 梅田店 <a class="map-btn" href="https://maps.google.com/?q=鴨to葱+梅田+大阪" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">鴨骨清爽高湯拉麵，蔥花大量，湯頭清甜不膩</div><div class="meal-price">¥1,500–1,800（NT$300–360）/人</div></div>
-              <div class="meal-card"><div class="meal-type">晚餐</div><div class="meal-name">肉のあさつ 梅田お初天神店 <a class="map-btn" href="https://maps.app.goo.gl/JdMxwx3Lm6DUeq7Q8" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">黃金出汁涮涮鍋，和牛薄切片下鍋一熟即撈，附江戶前壽司</div><div class="meal-price">¥4,000–6,000（NT$800–1,200）/人</div></div>
             </div>
           </div>
         </div>
@@ -1747,16 +1791,28 @@ footer {
             <div class="day-title">最後採買 × 帶著回憶返台</div>
             <div class="day-meta">
               <span>✈️ CX565 16:15 起飛</span>
-              <span class="day-cost-tag">NT$4,870（2人）</span>
             </div>
           </div>
-          <div class="day-weather">👜 方便打理行李的輕便服裝</div>
+          <div class="day-header-footer">
+            <span class="day-cost-tag">NT$4,870（2人）</span>
+            <span class="day-weather">👜 方便打理行李的輕便服裝</span>
+          </div>
         </div>
         <div class="day-body">
           <div class="timeline">
             <div class="tl-block">
               <div class="tl-period"><div class="period-dot">🌅</div>上午</div>
               <div class="tl-items">
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">早餐</span>
+                    🏪 飯店 / 便利商店
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">飯糰或三明治搭熱咖啡，時間寶貴別久坐</div>
+                    <div class="meta-row">¥500（NT$100）/人</div>
+                  </div>
+                </div>
                 <div class="tl-item">
                   <div class="tl-item-name"><span class="tl-time">11:30</span>🛍️ 難波 / 心齋橋最後採買 <a class="map-btn" href="https://maps.google.com/?q=なんば+心斎橋+大阪市中央区" target="_blank" rel="noopener noreferrer">導航</a></div>
                   <div class="tl-item-meta">
@@ -1768,6 +1824,17 @@ footer {
                     </div>
                     <div class="meta-row note">📌 11:00 退房後寄放行李，輕裝出發</div>
                     <div class="meta-row">⏱ 2–3 小時</div>
+                  </div>
+                </div>
+                <div class="tl-item tl-meal">
+                  <div class="tl-item-name">
+                    <span class="meal-label">午餐</span>
+                    🍛 自由軒 難波本店
+                    <a class="map-btn" href="https://maps.google.com/?q=自由軒+難波本店+大阪" target="_blank" rel="noopener noreferrer">導航</a>
+                  </div>
+                  <div class="tl-item-meta">
+                    <div class="meta-row">大阪百年咖哩名物，蓬鬆生蛋拌咖哩飯，吃了再走最有大阪味</div>
+                    <div class="meta-row">¥900–1,300（NT$180–260）/人</div>
                   </div>
                 </div>
               </div>
@@ -1789,13 +1856,6 @@ footer {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="meals-section">
-            <div class="meals-title">餐飲推薦</div>
-            <div class="meals-grid">
-              <div class="meal-card"><div class="meal-type">早餐</div><div class="meal-name">飯店 / 便利商店</div><div class="meal-desc">飯糰或三明治搭熱咖啡，時間寶貴別久坐</div><div class="meal-price">¥500（NT$100）/人</div></div>
-              <div class="meal-card"><div class="meal-type">午餐</div><div class="meal-name">自由軒 難波本店 <a class="map-btn" href="https://maps.google.com/?q=自由軒+難波本店+大阪" target="_blank" rel="noopener noreferrer">導航</a></div><div class="meal-desc">大阪百年咖哩名物，蓬鬆生蛋拌咖哩飯，吃了再走最有大阪味</div><div class="meal-price">¥900–1,300（NT$180–260）/人</div></div>
             </div>
           </div>
         </div>
@@ -1840,9 +1900,8 @@ function switchTab(idx) {
   panels[idx].classList.add('active');
   // Scroll active button into view in nav
   tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  // Scroll to tabs nav so content is visible below it
-  const navTop = document.querySelector('.tabs-nav-wrapper').getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({ top: navTop, behavior: 'smooth' });
+  // Scroll to tabs nav so content is visible below it (offsetTop is document-relative, unaffected by sticky)
+  window.scrollTo({ top: document.querySelector('.tabs-nav-wrapper').offsetTop, behavior: 'smooth' });
 }
 
 // ── Keyboard navigation for tabs ──
@@ -1938,6 +1997,29 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
 document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => observer.observe(el));
+
+// ── Hero auto-scroll to tab nav ──
+(function () {
+  const heroEl = document.querySelector('.hero');
+  const navWrapper = document.querySelector('.tabs-nav-wrapper');
+  let autoScrolled = false;
+  let lastScrollY = 0;
+
+  const heroObs = new IntersectionObserver((entries) => {
+    const entry = entries[0];
+    const scrollingDown = window.scrollY > lastScrollY;
+    lastScrollY = window.scrollY;
+    if (!entry.isIntersecting && scrollingDown && !autoScrolled) {
+      autoScrolled = true;
+      window.scrollTo({ top: navWrapper.offsetTop, behavior: 'smooth' });
+    }
+    if (entry.isIntersecting) {
+      autoScrolled = false;
+    }
+  }, { threshold: 0.05 });
+
+  heroObs.observe(heroEl);
+})();
 </script>
 </body>
 </html>
