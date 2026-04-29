@@ -322,6 +322,17 @@ section { padding: 64px 0; }
   transition: text-decoration-color 150ms ease;
 }
 .meta-row a:hover { text-decoration-color: var(--coral-dark); }
+.meta-row a.map-btn {
+  flex-shrink: 0;
+  font-size: .72rem; font-weight: 600;
+  padding: 2px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; line-height: 1;
+  background: var(--coral); color: var(--white);
+  text-decoration: none;
+  transition: transform 180ms var(--spring), box-shadow 180ms ease;
+}
+.meta-row a.map-btn:hover { transform: scale(1.06); box-shadow: 0 4px 10px rgba(153,70,58,.4); text-decoration: none; }
+.meta-row a.map-btn:active { transform: scale(0.96); }
 
 /* ── MEAL ITEMS (inline in timeline) ── */
 .tl-meal {
