@@ -39,7 +39,7 @@ function switchTab(idx) {
   }, { once: true });
 
   currentTab = idx;
-  window.scrollTo({ top: document.querySelector('.tabs-nav-wrapper').offsetTop, behavior: 'smooth' });
+  window.scrollTo({ top: document.querySelector('.tabs-nav-wrapper').offsetTop, behavior: 'instant' });
 }
 
 // ── Keyboard navigation for tabs ──

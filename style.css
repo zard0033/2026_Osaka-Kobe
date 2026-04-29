@@ -193,7 +193,7 @@ section { padding: 64px 0; }
 
 
 /* ── TABS ── */
-.tabs-section { background: var(--cream); padding-top: 0; }
+.tabs-section { background: var(--cream); padding-top: 0; padding-bottom: 0; }
 .tabs-nav-wrapper {
   position: sticky;
   top: 0;
