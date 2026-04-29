@@ -5,7 +5,13 @@ let currentTab = 0;
 
 function switchTab(idx) {
   if (idx === currentTab) return;
-  panels[currentTab].classList.remove('active');
+  const goingBack = idx < currentTab;
+  panels[currentTab].classList.remove('active', 'slide-back');
+  if (goingBack) {
+    panels[idx].classList.add('slide-back');
+  } else {
+    panels[idx].classList.remove('slide-back');
+  }
   tabBtns.forEach((b, i) => {
     b.classList.toggle('active', i === idx);
     b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
@@ -13,9 +19,7 @@ function switchTab(idx) {
   });
   currentTab = idx;
   panels[idx].classList.add('active');
-  // Scroll active button into view in nav
   tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  // Scroll to tabs nav so content is visible below it (offsetTop is document-relative, unaffected by sticky)
   window.scrollTo({ top: document.querySelector('.tabs-nav-wrapper').offsetTop, behavior: 'smooth' });
 }
 
