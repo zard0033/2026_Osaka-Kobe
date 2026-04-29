@@ -135,3 +135,26 @@ document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => observer.ob
 
   heroObs.observe(heroEl);
 })();
+
+// ── Mobile swipe to switch tabs ──
+(function () {
+  const panelsEl = document.querySelector('.tabs-panels');
+  let startX = 0, startY = 0;
+  const THRESHOLD = 50;
+
+  panelsEl.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  panelsEl.addEventListener('touchend', e => {
+    if (e.target.closest('.comparison-grid')) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) < THRESHOLD || Math.abs(dy) > Math.abs(dx)) return;
+    const next = dx < 0 ? currentTab + 1 : currentTab - 1;
+    if (next < 0 || next >= tabBtns.length) return;
+    switchTab(next);
+    tabBtns[next].focus();
+  }, { passive: true });
+})();
