@@ -203,7 +203,6 @@ section { padding: 64px 0; }
   background: var(--coral);
   color: var(--white);
   border-color: var(--coral);
-  box-shadow: 0 4px 14px rgba(153,70,58,.4);
 }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; animation: tabEnterRight 260ms var(--ease-out) forwards; }
@@ -248,15 +247,22 @@ section { padding: 64px 0; }
 .day-header .day-num-row {
   display: flex; align-items: center; gap: 8px;
 }
-.day-header .day-num-row .day-cost-tag { margin-left: auto; }
+.day-header .day-num-row .day-weather {
+  margin-left: auto;
+  font-size: .7rem; opacity: .85;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 58%;
+}
 .day-header .day-num {
-  font-size: .68rem; font-weight: 700;
+  font-size: .72rem; font-weight: 700;
   letter-spacing: .14em; text-transform: uppercase;
-  color: rgba(255,255,255,.55); line-height: 1;
+  color: rgba(255,255,255,.72); line-height: 1;
+  flex-shrink: 0;
 }
 .day-header .day-title {
-  font-size: 1.05rem; font-weight: 700;
-  margin-top: 4px;
+  font-size: .88rem; font-weight: 500;
+  opacity: .7;
+  margin-top: 3px;
 }
 .day-header .day-meta {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -265,7 +271,7 @@ section { padding: 64px 0; }
   border-top: 1px solid rgba(255,255,255,.2);
   padding-top: 5px;
 }
-.day-header .day-weather { font-size: .75rem; opacity: .85; }
+.day-header .day-meta .day-cost-tag { flex-shrink: 0; }
 .day-body { padding: 28px; }
 
 /* ── TIMELINE ── */
@@ -686,9 +692,10 @@ footer .heart { color: var(--coral); }
 }
 .day-date-big {
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: .95rem; font-weight: 700;
-  color: rgba(255,255,255,.9);
+  font-size: 1.05rem; font-weight: 700;
+  color: rgba(255,255,255,.95);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .day-date-big .day-date-dow {
   display: inline; font-size: .9em;
