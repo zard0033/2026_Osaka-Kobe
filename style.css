@@ -177,7 +177,7 @@ section { padding: 64px 0; }
   transition: opacity 200ms ease;
 }
 .tabs-nav-wrapper .container.scrolled-end::after { opacity: 0; }
-.tabs-panels { padding-top: 32px; overflow: hidden; }
+.tabs-panels { padding-top: 32px; overflow: hidden; position: relative; }
 .tabs-nav {
   display: flex; gap: 6px; overflow-x: auto;
   padding-bottom: 2px;
@@ -854,6 +854,36 @@ footer {
   .option-hint .hint-mobile { display: inline; }
   .tabs-nav { gap: 4px; }
   .tab-btn { padding: 10px 14px; font-size: .78rem; min-height: 44px; }
+
+  /* Tab panels: scroll-snap on mobile (mirrors D2 comparison-grid pattern) */
+  .tabs-panels {
+    overflow: visible;
+    padding-top: 0;
+  }
+  .tabs-panels > .container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    touch-action: pan-x pan-y;
+    padding: 0;
+    max-width: none;
+    margin: 0;
+  }
+  .tabs-panels > .container::-webkit-scrollbar { display: none; }
+  .tab-panel {
+    display: block !important;
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    padding-top: 24px;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+  .tab-panel.active { animation: none; }
+  .tab-panel.tab-leaving { position: static !important; animation: none !important; }
 }
 @media (max-width: 450px) {
   .tl-items { padding-left: 46px; }

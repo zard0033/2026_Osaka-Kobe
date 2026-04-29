@@ -1,13 +1,28 @@
 // ── Tab switching ──
 const panels = document.querySelectorAll('.tab-panel');
 const tabBtns = document.querySelectorAll('.tab-btn');
+const tabsContainer = document.querySelector('.tabs-panels .container');
 let currentTab = 0;
 
 function switchTab(idx) {
   if (idx === currentTab) return;
   const goingBack = idx < currentTab;
 
-  // Outgoing: keep visible as absolute overlay, slide out
+  tabBtns.forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+    b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    b.setAttribute('tabindex', i === idx ? '0' : '-1');
+  });
+  tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+
+  if (mqMobile.matches) {
+    // Mobile: native scroll-snap handles the visual transition
+    currentTab = idx;
+    tabsContainer.scrollTo({ left: idx * tabsContainer.clientWidth, behavior: 'smooth' });
+    return;
+  }
+
+  // Desktop: CSS slide animation
   const outgoing = panels[currentTab];
   if (goingBack) outgoing.classList.add('go-back');
   outgoing.classList.add('tab-leaving');
@@ -16,7 +31,6 @@ function switchTab(idx) {
     outgoing.classList.remove('tab-leaving', 'go-back');
   }, { once: true });
 
-  // Incoming: slide in from the opposite side
   const incoming = panels[idx];
   if (goingBack) incoming.classList.add('go-back');
   incoming.classList.add('active');
@@ -24,13 +38,7 @@ function switchTab(idx) {
     incoming.classList.remove('go-back');
   }, { once: true });
 
-  tabBtns.forEach((b, i) => {
-    b.classList.toggle('active', i === idx);
-    b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
-    b.setAttribute('tabindex', i === idx ? '0' : '-1');
-  });
   currentTab = idx;
-  tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
   window.scrollTo({ top: document.querySelector('.tabs-nav-wrapper').offsetTop, behavior: 'smooth' });
 }
 
@@ -105,6 +113,27 @@ if (compGrid) {
   }, { passive: true });
 }
 
+// ── Mobile: sync tab buttons after native swipe (mirrors compGrid scroll detection) ──
+if (tabsContainer) {
+  let tabSyncTimer;
+  tabsContainer.addEventListener('scroll', () => {
+    if (!mqMobile.matches) return;
+    clearTimeout(tabSyncTimer);
+    tabSyncTimer = setTimeout(() => {
+      const nearest = Math.round(tabsContainer.scrollLeft / tabsContainer.clientWidth);
+      if (nearest !== currentTab && nearest >= 0 && nearest < panels.length) {
+        currentTab = nearest;
+        tabBtns.forEach((b, i) => {
+          b.classList.toggle('active', i === nearest);
+          b.setAttribute('aria-selected', i === nearest ? 'true' : 'false');
+          b.setAttribute('tabindex', i === nearest ? '0' : '-1');
+        });
+        tabBtns[nearest].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      }
+    }, 90);
+  }, { passive: true });
+}
+
 // ── Back to top ──
 const backToTop = document.getElementById('backToTop');
 window.addEventListener('scroll', () => {
@@ -163,6 +192,7 @@ document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => observer.ob
   }, { passive: true });
 
   panelsEl.addEventListener('touchend', e => {
+    if (mqMobile.matches) return;
     if (e.target.closest('.comparison-grid')) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
