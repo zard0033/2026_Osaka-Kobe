@@ -269,34 +269,39 @@ section { padding: 64px 0; }
   color: var(--white);
   display: flex; flex-direction: column; gap: 0;
 }
-/* Row 1: date/title left, temperature right */
+/* Row 1: date left, temperature right — vertically centered */
 .day-hd-top {
-  display: flex; align-items: flex-start; gap: 14px;
+  display: flex; align-items: center; gap: 14px;
 }
 .day-hd-left {
   flex: 1; min-width: 0;
 }
 .day-hd-right {
-  flex-shrink: 0; text-align: right; padding-top: 2px;
+  flex-shrink: 0; text-align: right;
 }
 .day-header .day-num {
   font-size: .68rem; font-weight: 700;
   letter-spacing: .14em; text-transform: uppercase;
-  color: rgba(255,255,255,.68); line-height: 1;
+  color: rgba(255,255,255,.82); line-height: 1;
   flex-shrink: 0;
+}
+/* Row 2: title left, rain right */
+.day-hd-middle {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; margin-top: 6px;
 }
 .day-header .day-title {
   font-size: .9rem; font-weight: 600;
-  opacity: .88; margin-top: 4px; line-height: 1.3;
+  color: rgba(255,255,255,.92); line-height: 1.3;
 }
 /* Temperature — prominent */
 .day-weather-main {
   font-size: 1.65rem; font-weight: 700;
-  color: #fff; white-space: nowrap; line-height: 1;
+  color: rgba(255,255,255,.95); white-space: nowrap; line-height: 1;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
-.day-weather-lo { font-size: .62em; opacity: .55; font-weight: 400; }
-.day-rain { font-size: .7rem; color: rgba(255,255,255,.65); margin-top: 3px; }
+.day-weather-lo { font-size: .62em; opacity: .82; font-weight: 500; }
+.day-rain { font-size: .85rem; color: rgba(255,255,255,.85); white-space: nowrap; }
 /* Row 3: chips — full width, separated */
 .day-chips-row {
   display: flex; flex-wrap: wrap; gap: 5px;
@@ -357,7 +362,7 @@ section { padding: 64px 0; }
 .tl-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .tl-item-name {
   font-size: .95rem; font-weight: 600; color: var(--brown);
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;
 }
 .tl-item-name .tl-btns { margin-left: auto; display: flex; gap: 4px; flex-shrink: 0; }
 .tl-item-name a.map-btn {
@@ -372,7 +377,15 @@ section { padding: 64px 0; }
 .tl-item-name > a.map-btn:only-of-type { margin-left: auto; }
 .tl-item-name a.map-btn:hover { transform: scale(1.2); }
 .tl-item-name a.map-btn:active { transform: scale(0.9); }
-.tl-item-name a.yt-btn { background: #c4302b; }
+.tl-item-name a.yt-btn {
+  display: inline-flex; align-items: center; line-height: 1;
+  background: #c4302b; color: #fff;
+  font-size: .65rem; font-weight: 700; letter-spacing: .03em;
+  padding: 3px 7px; border-radius: 999px;
+  text-decoration: none; white-space: nowrap; flex-shrink: 0;
+  transition: background 150ms ease;
+}
+.tl-item-name a.yt-btn:hover { background: #a52a1f; }
 .tl-item-meta {
   margin-top: 9px; padding-top: 8px;
   border-top: 1px solid rgba(196,168,130,.22);
@@ -717,7 +730,7 @@ footer .heart { color: var(--coral); }
 }
 .day-date-big .day-date-dow {
   display: inline; font-size: .9em;
-  opacity: .72; margin-left: 3px;
+  opacity: .9; margin-left: 3px;
 }
 
 /* ── TIMELINE TIME BADGE ── */
@@ -754,13 +767,14 @@ footer .heart { color: var(--coral); }
 .shop-chip .chip-icon { font-size: .88rem; }
 .shop-chip::after { content: '↗'; font-size: .6rem; opacity: .5; margin-left: 2px; vertical-align: middle; }
 
-/* ── SPOT FEATURE TAG ── */
+/* ── SPOT FEATURE TAG — chip style, placed inside shop-chips ── */
 .spot-feature {
-  display: inline-flex; align-items: center; gap: 2px;
-  font-size: .66rem; font-weight: 500;
-  padding: 1px 0;
-  background: none; color: var(--text-muted);
-  margin-right: 8px;
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--white);
+  border: 1px solid var(--brown-pale);
+  border-radius: 999px;
+  padding: 3px 10px 3px 8px;
+  font-size: .68rem; font-weight: 500; color: var(--brown);
 }
 
 /* ── MEAL CHIP ── */
@@ -776,6 +790,18 @@ footer .heart { color: var(--coral); }
 a.meal-chip::after { content: ' ↗'; font-size: .6rem; opacity: .55; margin-left: 1px; }
 a.meal-chip:hover { background: rgba(196,168,130,.32); color: var(--brown); }
 a.meal-chip:active { transform: scale(0.97); }
+
+/* ── BOOKING BUTTON ── */
+.book-btn {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: #c0392b; color: #fff;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: .68rem; font-weight: 600;
+  text-decoration: none; white-space: nowrap; flex-shrink: 0;
+  transition: background 150ms ease;
+}
+.book-btn:hover { background: #a93226; }
 
 
 /* ── BACK TO TOP ── */
@@ -826,7 +852,8 @@ footer {
 }
 @media (max-width: 600px) {
   .ov-stats { grid-template-columns: repeat(3, 1fr); }
-  .day-weather-main { font-size: 1.3rem; }
+  .day-weather-main { font-size: 1.2rem; }
+  .day-rain { font-size: .78rem; }
   .day-chips-row { gap: 4px; }
   .day-chip { font-size: .6rem; padding: 2px 8px; }
   .day-body { padding: 16px 14px; }
@@ -864,6 +891,10 @@ footer {
     width: 7px; height: 7px; border-radius: 999px;
     background: var(--brown-pale);
     transition: all 220ms var(--ease-out);
+  }
+  .comp-dot.active {
+    background: transparent;
+    transform: none;
   }
   .comp-dot.active::before {
     background: var(--coral);
