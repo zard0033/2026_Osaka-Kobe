@@ -193,34 +193,19 @@ img { max-width: 100%; }
   opacity: 0;
   animation: bubbleIn 380ms var(--ease-out) 900ms forwards;
 }
-.hero-bubble::after {
-  content: '';
-  position: absolute;
-  top: 50%; transform: translateY(-50%);
-  border: 7px solid transparent;
-}
-/* Left bubble: sits to the LEFT of the photo, tail points RIGHT */
+/* Left bubble: sits to the LEFT of the photo */
 .hero-bubble--left {
   top: 60px;
   right: calc(100% + 10px);
-  border-top-right-radius: 4px;
+  white-space: normal;
+  max-width: 90px;
+  text-align: center;
 }
-.hero-bubble--left::after {
-  left: 100%;
-  border-left-color: rgba(255,255,255,.92);
-  border-right: none;
-}
-/* Right bubble: sits to the RIGHT of the photo, tail points LEFT */
+/* Right bubble: sits to the RIGHT of the photo */
 .hero-bubble--right {
   top: 60px;
   left: calc(100% + 10px);
-  border-top-left-radius: 4px;
   animation-delay: 1080ms;
-}
-.hero-bubble--right::after {
-  right: 100%;
-  border-right-color: rgba(255,255,255,.92);
-  border-left: none;
 }
 @keyframes bubbleIn {
   from { opacity: 0; transform: translateY(6px) scale(.92); }
