@@ -129,7 +129,7 @@ img { max-width: 100%; }
 }
 .hero-meta {
   display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-  margin-top: 36px;
+  margin-top: 24px;
   opacity: 0; transform: translateY(16px);
   animation: fadeUp 500ms var(--ease-out) 400ms forwards;
 }
@@ -147,6 +147,22 @@ img { max-width: 100%; }
   color: rgba(255,255,255,.9);
 }
 .hero-meta-item .val { font-size: .95rem; font-weight: 600; color: #fff; }
+.hero-photo {
+  display: flex; justify-content: center;
+  margin: 28px 0 0;
+  opacity: 0; transform: translateY(20px);
+  animation: fadeUp 600ms var(--ease-out) 340ms forwards;
+}
+.hero-couple-img {
+  width: 190px; height: 250px;
+  object-fit: cover; object-position: center top;
+  border-radius: 120px;
+  border: 3px solid rgba(255,255,255,.55);
+  box-shadow: 0 8px 32px rgba(0,0,0,.30);
+}
+@media (max-width: 480px) {
+  .hero-couple-img { width: 155px; height: 205px; }
+}
 .hero-scroll {
   position: absolute;
   bottom: max(28px, calc(env(safe-area-inset-bottom) + 12px));
