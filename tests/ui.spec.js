@@ -1,5 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const { AxeBuilder } = require('@axe-core/playwright');
 const path = require('path');
 
 const PAGE_URL = `file://${path.resolve(__dirname, '../index.html')}`;
@@ -17,10 +18,10 @@ async function getNavBottom(page) {
   });
 }
 
-// ── Desktop tests (1280×800) ───────────────────────────────────────────────
+// ── Desktop tests (1440×900) ───────────────────────────────────────────────
 
-test.describe('Desktop (1280×800)', () => {
-  test.use({ viewport: { width: 1280, height: 800 } });
+test.describe('Desktop (1440×900)', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
 
   test.beforeEach(async ({ page }) => {
     await page.goto(PAGE_URL);
@@ -40,21 +41,15 @@ test.describe('Desktop (1280×800)', () => {
   });
 
   test('點 Day tab 後不應捲到頁面頂端（scrollY 應貼近 nav 位置）', async ({ page }) => {
-    // 先滾到頁面中段讓 hero 不在視窗內
     await page.evaluate(() => window.scrollTo(0, 600));
     await page.locator('#tab-btn-2').click();
-    await page.waitForTimeout(500); // 等 smooth scroll
+    await page.waitForTimeout(500);
 
     const scrollY = await getScrollY(page);
     const navBottom = await getNavBottom(page);
 
-    // nav 應在視窗內（nav bottom > 0 且 < viewport height）
     expect(navBottom).toBeGreaterThan(0);
     expect(navBottom).toBeLessThan(800);
-
-    // scrollY 不應為 0（不能捲到頂端）
-    // 只有在 hero 很短或頁面結構特殊時才允許 0
-    // 這裡檢查 nav 確實在視窗內就夠了
     expect(navBottom).toBeGreaterThan(0);
   });
 
@@ -95,7 +90,6 @@ test.describe('Mobile (390×844)', () => {
 
   test('Day 2 切換 Option B → option panel 顯示 B 內容', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
-    // 點第二個 comp-card（Option B）
     const cards = page.locator('.comp-card');
     await cards.nth(1).click();
     await expect(page.locator('#opt-1')).toHaveClass(/active/);
@@ -125,7 +119,7 @@ test.describe('Mobile (390×844)', () => {
 // ── Content integrity ──────────────────────────────────────────────────────
 
 test.describe('內容完整性', () => {
-  test.use({ viewport: { width: 1280, height: 800 } });
+  test.use({ viewport: { width: 1440, height: 900 } });
 
   test.beforeEach(async ({ page }) => {
     await page.goto(PAGE_URL);
@@ -155,5 +149,130 @@ test.describe('內容完整性', () => {
     await page.goto(PAGE_URL);
     await page.waitForTimeout(500);
     expect(errors).toHaveLength(0);
+  });
+});
+
+// ── WCAG 2.1 AA – axe-core ────────────────────────────────────────────────
+
+for (const [label, width, height] of [
+  ['Desktop 1440px', 1440, 900],
+  ['Mobile 390px',   390,  844],
+]) {
+  test.describe(`WCAG 2.1 AA – axe-core (${label})`, () => {
+    test.use({ viewport: { width, height } });
+
+    test.beforeEach(async ({ page }) => {
+      await page.goto(PAGE_URL);
+      await page.waitForLoadState('domcontentloaded');
+      // Disable all transitions/animations so scroll-reveal opacity is instant
+      await page.evaluate(() => {
+        const s = document.createElement('style');
+        s.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+        document.head.appendChild(s);
+        document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => el.classList.add('visible'));
+      });
+    });
+
+    test('總覽：無 WCAG 2.1 AA 違規', async ({ page }) => {
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa'])
+        .analyze();
+      expect(results.violations).toEqual([]);
+    });
+
+    test('Day 1：無 WCAG 2.1 AA 違規', async ({ page }) => {
+      await page.locator('#tab-btn-1').click();
+      // Re-force visible for elements that re-enter rendering tree after tab switch
+      await page.evaluate(() => {
+        document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => el.classList.add('visible'));
+      });
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa'])
+        .analyze();
+      expect(results.violations).toEqual([]);
+    });
+  });
+}
+
+// ── Semantic HTML & ARIA ───────────────────────────────────────────────────
+
+test.describe('Semantic HTML & ARIA', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(PAGE_URL);
+    await page.waitForLoadState('domcontentloaded');
+  });
+
+  test('html 有 lang 屬性', async ({ page }) => {
+    const lang = await page.locator('html').getAttribute('lang');
+    expect(lang).toBeTruthy();
+  });
+
+  test('頁面只有一個 h1', async ({ page }) => {
+    await expect(page.locator('h1')).toHaveCount(1);
+  });
+
+  test('所有 img 有 alt 屬性', async ({ page }) => {
+    const count = await page.locator('img:not([alt])').count();
+    expect(count).toBe(0);
+  });
+
+  test('#tab-btn-0 focus 輪廓可見', async ({ page }) => {
+    await page.locator('#tab-btn-0').focus();
+    const styles = await page.locator('#tab-btn-0').evaluate(el => {
+      const s = window.getComputedStyle(el);
+      return { outlineStyle: s.outlineStyle, outlineWidth: s.outlineWidth, boxShadow: s.boxShadow };
+    });
+    const visible =
+      (styles.outlineStyle !== 'none' && styles.outlineWidth !== '0px') ||
+      (styles.boxShadow !== 'none' && styles.boxShadow !== '');
+    expect(visible, 'Focus indicator 不可見').toBe(true);
+  });
+});
+
+// ── RWD – 320px ───────────────────────────────────────────────────────────
+
+test.describe('RWD – 320px (minimum mobile)', () => {
+  test.use({ viewport: { width: 320, height: 568 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(PAGE_URL);
+    await page.waitForLoadState('domcontentloaded');
+  });
+
+  test('頁面無水平溢出', async ({ page }) => {
+    const scrollWidth = await page.evaluate(() => document.body.scrollWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(320);
+  });
+
+  test('nav 可見且不橫向溢出', async ({ page }) => {
+    const nav = page.locator('.tabs-nav-wrapper');
+    await expect(nav).toBeVisible();
+    const overflow = await nav.evaluate(el => el.scrollWidth > el.clientWidth + 1);
+    expect(overflow).toBe(false);
+  });
+});
+
+// ── 觸控目標 – 全部按鈕 ───────────────────────────────────────────────────
+
+test.describe('觸控目標 – 全部 button (390px)', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(PAGE_URL);
+    await page.waitForLoadState('domcontentloaded');
+  });
+
+  test('所有 <button> 高度 ≥ 44px', async ({ page }) => {
+    const btns = await page.locator('button').evaluateAll(els =>
+      els.map(el => ({
+        label: (el.textContent?.trim().slice(0, 20) || el.id || '(no label)'),
+        h: el.getBoundingClientRect().height,
+      }))
+    );
+    for (const { label, h } of btns) {
+      expect(h, `"${label}" 應 ≥ 44px`).toBeGreaterThanOrEqual(44);
+    }
   });
 });
