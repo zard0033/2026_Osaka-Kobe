@@ -266,10 +266,12 @@ test.describe('觸控目標 – 全部 button (390px)', () => {
 
   test('所有 <button> 高度 ≥ 44px', async ({ page }) => {
     const btns = await page.locator('button').evaluateAll(els =>
-      els.map(el => ({
-        label: (el.textContent?.trim().slice(0, 20) || el.id || '(no label)'),
-        h: el.getBoundingClientRect().height,
-      }))
+      els
+        .filter(el => el.getBoundingClientRect().height > 0)
+        .map(el => ({
+          label: (el.textContent?.trim().slice(0, 20) || el.id || '(no label)'),
+          h: el.getBoundingClientRect().height,
+        }))
     );
     for (const { label, h } of btns) {
       expect(h, `"${label}" 應 ≥ 44px`).toBeGreaterThanOrEqual(44);

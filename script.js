@@ -2,6 +2,7 @@
 const panels = document.querySelectorAll('.tab-panel');
 const tabBtns = document.querySelectorAll('.tab-btn');
 const tabsContainer = document.querySelector('.tabs-panels .container');
+const mqMobile = window.matchMedia('(max-width: 600px)');
 let currentTab = 0;
 
 function switchTab(idx) {
@@ -69,7 +70,6 @@ const optPanels = document.querySelectorAll('.option-panel');
 const compCards = document.querySelectorAll('.comp-card');
 const compDots  = document.querySelectorAll('.comp-dot');
 const compGrid  = document.querySelector('.comparison-grid');
-const mqMobile  = window.matchMedia('(max-width: 600px)');
 let currentOpt = 0;
 let optScrollLock = false;
 
@@ -78,7 +78,10 @@ function switchOption(idx, { scroll = false } = {}) {
   currentOpt = idx;
   optPanels.forEach((p, i) => p.classList.toggle('active', i === idx));
   compCards.forEach((c, i) => c.classList.toggle('selected', i === idx));
-  compDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  compDots.forEach((d, i) => {
+    d.classList.toggle('active', i === idx);
+    d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+  });
   if (scroll && compGrid && mqMobile.matches) {
     optScrollLock = true;
     compCards[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
@@ -95,42 +98,48 @@ compDots.forEach((dot, i)   => dot.addEventListener('click', () => switchOption(
 
 // Mobile: auto-switch panel based on which card is centered after swipe
 if (compGrid) {
+  function syncOptFromScroll() {
+    if (optScrollLock || !mqMobile.matches) return;
+    const gridRect = compGrid.getBoundingClientRect();
+    const center = gridRect.left + gridRect.width / 2;
+    let nearest = 0, best = Infinity;
+    compCards.forEach((card, i) => {
+      const r = card.getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - center);
+      if (d < best) { best = d; nearest = i; }
+    });
+    if (nearest !== currentOpt) switchOption(nearest);
+  }
+  compGrid.addEventListener('scrollend', syncOptFromScroll, { passive: true });
   let scrollTimer;
   compGrid.addEventListener('scroll', () => {
     if (optScrollLock || !mqMobile.matches) return;
     clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => {
-      const gridRect = compGrid.getBoundingClientRect();
-      const center = gridRect.left + gridRect.width / 2;
-      let nearest = 0, best = Infinity;
-      compCards.forEach((card, i) => {
-        const r = card.getBoundingClientRect();
-        const d = Math.abs(r.left + r.width / 2 - center);
-        if (d < best) { best = d; nearest = i; }
-      });
-      if (nearest !== currentOpt) switchOption(nearest);
-    }, 90);
+    scrollTimer = setTimeout(syncOptFromScroll, 50);
   }, { passive: true });
 }
 
-// ── Mobile: sync tab buttons after native swipe (mirrors compGrid scroll detection) ──
+// ── Mobile: sync tab buttons after native swipe ──
 if (tabsContainer) {
+  function syncTabFromScroll() {
+    if (!mqMobile.matches) return;
+    const nearest = Math.round(tabsContainer.scrollLeft / tabsContainer.clientWidth);
+    if (nearest !== currentTab && nearest >= 0 && nearest < panels.length) {
+      currentTab = nearest;
+      tabBtns.forEach((b, i) => {
+        b.classList.toggle('active', i === nearest);
+        b.setAttribute('aria-selected', i === nearest ? 'true' : 'false');
+        b.setAttribute('tabindex', i === nearest ? '0' : '-1');
+      });
+      tabBtns[nearest].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  }
+  tabsContainer.addEventListener('scrollend', syncTabFromScroll, { passive: true });
   let tabSyncTimer;
   tabsContainer.addEventListener('scroll', () => {
     if (!mqMobile.matches) return;
     clearTimeout(tabSyncTimer);
-    tabSyncTimer = setTimeout(() => {
-      const nearest = Math.round(tabsContainer.scrollLeft / tabsContainer.clientWidth);
-      if (nearest !== currentTab && nearest >= 0 && nearest < panels.length) {
-        currentTab = nearest;
-        tabBtns.forEach((b, i) => {
-          b.classList.toggle('active', i === nearest);
-          b.setAttribute('aria-selected', i === nearest ? 'true' : 'false');
-          b.setAttribute('tabindex', i === nearest ? '0' : '-1');
-        });
-        tabBtns[nearest].scrollIntoView({ block: 'nearest', inline: 'nearest' });
-      }
-    }, 90);
+    tabSyncTimer = setTimeout(syncTabFromScroll, 50);
   }, { passive: true });
 }
 
@@ -142,43 +151,36 @@ window.addEventListener('scroll', () => {
 backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 // ── IntersectionObserver for scroll reveals ──
+const tipCards = [...document.querySelectorAll('.tip-card')];
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      const el = entry.target;
-      const delay = el.classList.contains('tip-card')
-        ? Array.from(document.querySelectorAll('.tip-card')).indexOf(el) * 80
-        : 0;
-      setTimeout(() => el.classList.add('visible'), delay);
-      observer.unobserve(el);
+      const idx = tipCards.indexOf(entry.target);
+      setTimeout(() => entry.target.classList.add('visible'), idx >= 0 ? idx * 80 : 0);
+      observer.unobserve(entry.target);
     }
   });
 }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
 document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => observer.observe(el));
 
-// ── Hero auto-scroll to tab nav ──
-(function () {
-  const heroEl = document.querySelector('.hero');
-  const navWrapper = document.querySelector('.tabs-nav-wrapper');
-  let autoScrolled = false;
-  let lastScrollY = 0;
-
-  const heroObs = new IntersectionObserver((entries) => {
-    const entry = entries[0];
-    const scrollingDown = window.scrollY > lastScrollY;
-    lastScrollY = window.scrollY;
-    if (!entry.isIntersecting && scrollingDown && !autoScrolled) {
-      autoScrolled = true;
-      window.scrollTo({ top: navWrapper.offsetTop, behavior: 'smooth' });
+// ── Transit connectors ──
+document.querySelectorAll('.tl-transit-btn').forEach(btn => {
+  const detail = btn.nextElementSibling;
+  btn.addEventListener('click', () => {
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    if (isOpen) {
+      detail.classList.add('closing');
+      detail.addEventListener('animationend', () => {
+        detail.classList.remove('open', 'closing');
+      }, { once: true });
+    } else {
+      detail.classList.add('open');
     }
-    if (entry.isIntersecting) {
-      autoScrolled = false;
-    }
-  }, { threshold: 0.05 });
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
+});
 
-  heroObs.observe(heroEl);
-})();
 
 // ── Mobile swipe to switch tabs ──
 (function () {
