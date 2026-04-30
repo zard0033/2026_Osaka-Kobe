@@ -16,7 +16,14 @@ function switchTab(idx) {
   });
   tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
-  // CSS slide animation (shared between mobile and desktop)
+  if (mqMobile.matches) {
+    // Mobile: native scroll-snap handles the visual transition
+    currentTab = idx;
+    tabsContainer.scrollTo({ left: idx * tabsContainer.clientWidth, behavior: 'smooth' });
+    return;
+  }
+
+  // Desktop: CSS slide animation
   const outgoing = panels[currentTab];
   if (goingBack) outgoing.classList.add('go-back');
   outgoing.classList.add('tab-leaving');
@@ -188,6 +195,7 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
   }, { passive: true });
 
   panelsEl.addEventListener('touchend', e => {
+    if (mqMobile.matches) return;
     if (e.target.closest('.comparison-grid')) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
