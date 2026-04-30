@@ -840,7 +840,8 @@ footer .heart { color: var(--coral); }
   padding: 1px 7px; border-radius: 999px;
   flex-shrink: 0; letter-spacing: .02em;
 }
-.tl-item-return {
+.tl-item-return,
+.tl-item-depart {
   background: rgba(153,70,58,.04);
   border-color: rgba(196,168,130,.5);
   border-style: dashed;
