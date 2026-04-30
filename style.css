@@ -223,7 +223,9 @@ img { max-width: 100%; }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 @media (max-width: 720px) {
-  .hero-bubble { font-size: .68rem; padding: 6px 11px; }
+  .hero-photo { padding-top: 92px; }
+  .hero-bubble { font-size: .66rem; padding: 5px 10px; white-space: normal; max-width: 112px; text-align: center; }
+  .hero-bubble--right { top: 50px; }
 }
 
 /* Mobile: stack photo above text */
