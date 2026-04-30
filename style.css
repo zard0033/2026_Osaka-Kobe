@@ -179,42 +179,6 @@ img { max-width: 100%; }
   display: block;
 }
 
-/* Chat bubbles */
-.hero-bubble {
-  position: absolute; z-index: 2;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(14px);
-  border-radius: 14px;
-  padding: 7px 13px;
-  font-size: .73rem; font-weight: 600;
-  color: var(--brown);
-  white-space: nowrap;
-  box-shadow: 0 4px 18px rgba(0,0,0,.18);
-  opacity: 0;
-  animation: bubbleIn 380ms var(--ease-out) 900ms forwards;
-}
-/* Left bubble: sits to the LEFT of the photo */
-.hero-bubble--left {
-  top: 60px;
-  right: calc(100% + 10px);
-  white-space: normal;
-  text-align: center;
-  line-height: 1.7;
-}
-/* Right bubble: sits to the RIGHT of the photo */
-.hero-bubble--right {
-  top: 60px;
-  left: calc(100% + 10px);
-  animation-delay: 1080ms;
-}
-@keyframes bubbleIn {
-  from { opacity: 0; transform: translateY(6px) scale(.92); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-@media (max-width: 720px) {
-  .hero-bubble { font-size: .68rem; padding: 6px 11px; }
-  .hero-bubble--left, .hero-bubble--right { top: 50px; }
-}
 
 /* Mobile: stack photo above text */
 @media (max-width: 720px) {
