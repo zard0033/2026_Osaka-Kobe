@@ -378,14 +378,15 @@ section { padding: 64px 0; }
 .tl-item-name a.map-btn:hover { transform: scale(1.2); }
 .tl-item-name a.map-btn:active { transform: scale(0.9); }
 .tl-item-name a.yt-btn {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  padding: 0 1px;
   display: inline-flex; align-items: center; line-height: 1;
-  background: #c4302b; color: #fff;
-  font-size: .65rem; font-weight: 700; letter-spacing: .03em;
-  padding: 3px 7px; border-radius: 999px;
-  text-decoration: none; white-space: nowrap; flex-shrink: 0;
-  transition: background 150ms ease;
+  background: none;
+  transition: transform 200ms var(--spring);
 }
-.tl-item-name a.yt-btn:hover { background: #a52a1f; }
+.tl-item-name a.yt-btn:hover { transform: scale(1.2); }
+.tl-item-name a.yt-btn:active { transform: scale(0.9); }
 .tl-item-meta {
   margin-top: 9px; padding-top: 8px;
   border-top: 1px solid rgba(196,168,130,.22);
@@ -505,13 +506,13 @@ section { padding: 64px 0; }
 .comp-card a.yt-btn {
   flex-shrink: 0;
   display: inline-flex; align-items: center; line-height: 1;
-  font-size: .72rem; font-weight: 600;
-  padding: 3px 10px; border-radius: 999px;
-  background: #c4302b; color: #fff;
+  font-size: 1.15rem;
+  padding: 0 1px;
+  background: none;
   text-decoration: none;
   transition: transform 150ms var(--spring);
 }
-.comp-card a.yt-btn:hover { transform: scale(1.05); }
+.comp-card a.yt-btn:hover { transform: scale(1.15); }
 .comp-card a.yt-btn:active { transform: scale(0.94); }
 .comp-row { font-size: .76rem; color: var(--text-sub); margin-bottom: 5px; line-height: 1.4; }
 .comp-row b { color: var(--brown); }
@@ -764,7 +765,7 @@ footer .heart { color: var(--coral); }
 }
 .shop-chip:hover { transform: translateY(-2px); box-shadow: var(--shadow-xs); color: var(--coral-dark); }
 .shop-chip:active { transform: scale(0.96); }
-.shop-chip .chip-icon { font-size: .88rem; }
+.shop-chip .chip-icon { font-size: .72rem; line-height: 1; }
 .shop-chip::after { content: '↗'; font-size: .6rem; opacity: .5; margin-left: 2px; vertical-align: middle; }
 
 /* ── SPOT FEATURE TAG — chip style, placed inside shop-chips ── */
@@ -791,17 +792,6 @@ a.meal-chip::after { content: ' ↗'; font-size: .6rem; opacity: .55; margin-lef
 a.meal-chip:hover { background: rgba(196,168,130,.32); color: var(--brown); }
 a.meal-chip:active { transform: scale(0.97); }
 
-/* ── BOOKING BUTTON ── */
-.book-btn {
-  display: inline-flex; align-items: center; gap: 3px;
-  background: #c0392b; color: #fff;
-  border-radius: 999px;
-  padding: 3px 9px;
-  font-size: .68rem; font-weight: 600;
-  text-decoration: none; white-space: nowrap; flex-shrink: 0;
-  transition: background 150ms ease;
-}
-.book-btn:hover { background: #a93226; }
 
 
 /* ── BACK TO TOP ── */
