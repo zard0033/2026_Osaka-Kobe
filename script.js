@@ -173,11 +173,12 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
       detail.classList.add('closing');
       detail.addEventListener('animationend', () => {
         detail.classList.remove('open', 'closing');
+        btn.setAttribute('aria-expanded', 'false');
       }, { once: true });
     } else {
+      btn.setAttribute('aria-expanded', 'true');
       detail.classList.add('open');
     }
-    btn.setAttribute('aria-expanded', String(!isOpen));
   });
 });
 

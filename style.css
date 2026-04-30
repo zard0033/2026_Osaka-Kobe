@@ -477,8 +477,13 @@ section { padding: 64px 0; }
   color: var(--brown-light); font-size: .75rem; flex-shrink: 0;
   transition: transform 200ms var(--ease-out);
 }
-.transit-chevron::after { content: '›'; }
-.tl-transit-btn[aria-expanded="true"] .transit-chevron { transform: rotate(90deg); }
+.transit-chevron::after { content: '▾'; }
+.tl-transit-btn[aria-expanded="true"] .transit-chevron { transform: none; }
+.tl-transit-btn[aria-expanded="true"] .transit-chevron::after { content: '▴'; }
+.transit-leg-info {
+  font-size: .58rem; color: var(--text-sub);
+  white-space: nowrap; opacity: .85;
+}
 
 .tl-transit-detail {
   display: none;
