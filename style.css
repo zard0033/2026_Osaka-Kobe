@@ -163,6 +163,15 @@ img { max-width: 100%; }
 }
 .hero-meta-item .val { font-size: .92rem; font-weight: 600; color: #fff; }
 
+.hero-credits {
+  margin-top: 14px;
+  font-size: .72rem;
+  color: rgba(255,255,255,.75);
+  letter-spacing: .03em;
+  opacity: 0; transform: translateY(10px);
+  animation: fadeUp 500ms var(--ease-out) 520ms forwards;
+}
+
 /* Photo column */
 .hero-photo {
   flex: 0 0 auto;
@@ -216,62 +225,6 @@ img { max-width: 100%; }
 .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 section { padding: 64px 0; }
 
-
-/* ── CREDITS ── */
-.credits-section {
-  background: var(--cream);
-  padding: 52px 0 44px;
-}
-.credits-grid {
-  display: flex; gap: 20px; justify-content: center;
-}
-.credits-card {
-  flex: 1; max-width: 400px;
-  background: var(--white);
-  border: 1px solid var(--brown-pale);
-  border-radius: var(--r-lg);
-  padding: 28px 30px 26px;
-  box-shadow: var(--shadow-sm);
-}
-.credits-card-header {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  margin-bottom: 18px;
-}
-.credits-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.45rem; font-weight: 700; color: var(--brown);
-  line-height: 1;
-}
-.credits-role-tag {
-  display: inline-flex; align-items: center;
-  background: rgba(153,70,58,.08); color: var(--coral);
-  border: 1px solid rgba(153,70,58,.20);
-  border-radius: 999px;
-  font-size: .68rem; font-weight: 600; letter-spacing: .05em;
-  padding: 3px 11px;
-}
-.credits-role-tag--alt {
-  background: rgba(196,168,130,.14); color: var(--brown-mid);
-  border-color: rgba(196,168,130,.35);
-}
-.credits-list {
-  list-style: none; padding: 0; margin: 0;
-  display: flex; flex-direction: column; gap: 9px;
-}
-.credits-list li {
-  display: flex; align-items: center; gap: 10px;
-  font-size: .875rem; color: var(--brown-mid);
-}
-.credits-list li::before {
-  content: '';
-  display: inline-block; flex-shrink: 0;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--coral-light);
-}
-@media (max-width: 560px) {
-  .credits-grid { flex-direction: column; align-items: stretch; }
-}
 
 /* ── TABS ── */
 .tabs-section { background: var(--cream); padding-top: 0; padding-bottom: 0; }
