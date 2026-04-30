@@ -583,7 +583,7 @@ section { padding: 64px 0; }
 .comp-card.selected.option-c { border-color: var(--brown-mid); border-width: 3px; }
 .comp-dots {
   display: none; justify-content: center; gap: 8px;
-  margin: 6px 0 20px;
+  margin: 4px 0 8px;
 }
 .comp-dot {
   width: 8px; height: 8px; border-radius: 50%;
@@ -844,6 +844,36 @@ footer .heart { color: var(--coral); }
   background: rgba(153,70,58,.04);
   border-color: rgba(196,168,130,.5);
   border-style: dashed;
+}
+.tl-fork {
+  background: rgba(196,168,130,.08);
+  border: 1.5px dashed var(--brown-pale);
+  border-radius: var(--r-md);
+  padding: 8px 14px;
+  text-align: center;
+  font-size: .8rem;
+  color: var(--text-sub);
+  margin: 6px 0 2px;
+}
+.tl-fork strong { color: var(--brown); display: block; margin-bottom: 3px; font-size: .85rem; }
+.tl-subroute-header {
+  display: flex; align-items: center; gap: 8px;
+  margin: 10px 0 2px;
+}
+.tl-subroute-header::after {
+  content: ''; flex: 1; height: 1px; background: var(--brown-pale);
+}
+.tl-subroute-badge {
+  font-size: .7rem; font-weight: 700; padding: 2px 9px;
+  border-radius: 999px; white-space: nowrap; flex-shrink: 0;
+}
+.tl-subroute-badge--b1 {
+  background: rgba(139,69,171,.1); color: #8B45AB;
+  border: 1px solid rgba(139,69,171,.25);
+}
+.tl-subroute-badge--b2 {
+  background: rgba(230,87,72,.08); color: var(--coral);
+  border: 1px solid rgba(230,87,72,.25);
 }
 
 /* ── SHOP CHIPS ── */
