@@ -359,7 +359,6 @@ section { padding: 64px 0; }
   border: 1px solid var(--brown-pale);
   transition: transform 200ms var(--ease-out), box-shadow 200ms ease;
 }
-.tl-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .tl-item-name {
   font-size: .95rem; font-weight: 600; color: var(--brown);
   display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;
