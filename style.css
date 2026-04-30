@@ -198,8 +198,8 @@ img { max-width: 100%; }
   top: 60px;
   right: calc(100% + 10px);
   white-space: normal;
-  max-width: 90px;
   text-align: center;
+  line-height: 1.7;
 }
 /* Right bubble: sits to the RIGHT of the photo */
 .hero-bubble--right {
