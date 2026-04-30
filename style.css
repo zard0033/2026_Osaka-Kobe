@@ -167,7 +167,6 @@ img { max-width: 100%; }
 .hero-photo {
   flex: 0 0 auto;
   position: relative;
-  padding-top: 56px;
   opacity: 0; transform: translateY(28px);
   animation: fadeUp 700ms var(--ease-out) 180ms forwards;
 }
@@ -182,7 +181,7 @@ img { max-width: 100%; }
 
 /* Chat bubbles */
 .hero-bubble {
-  position: absolute; top: 0; z-index: 2;
+  position: absolute; z-index: 2;
   background: rgba(255,255,255,.92);
   backdrop-filter: blur(14px);
   border-radius: 14px;
@@ -197,35 +196,39 @@ img { max-width: 100%; }
 .hero-bubble::after {
   content: '';
   position: absolute;
-  bottom: -7px;
+  top: 50%; transform: translateY(-50%);
   border: 7px solid transparent;
-  border-bottom: none;
 }
+/* Left bubble: sits to the LEFT of the photo, tail points RIGHT */
 .hero-bubble--left {
-  left: 6px;
-  border-bottom-left-radius: 4px;
+  top: 60px;
+  right: calc(100% + 10px);
+  border-top-right-radius: 4px;
 }
 .hero-bubble--left::after {
-  right: 22px;
-  border-top-color: rgba(255,255,255,.92);
+  left: 100%;
+  border-left-color: rgba(255,255,255,.92);
+  border-right: none;
 }
+/* Right bubble: sits to the RIGHT of the photo, tail points LEFT */
 .hero-bubble--right {
-  right: 6px;
-  border-bottom-right-radius: 4px;
+  top: 60px;
+  left: calc(100% + 10px);
+  border-top-left-radius: 4px;
   animation-delay: 1080ms;
 }
 .hero-bubble--right::after {
-  left: 22px;
-  border-top-color: rgba(255,255,255,.92);
+  right: 100%;
+  border-right-color: rgba(255,255,255,.92);
+  border-left: none;
 }
 @keyframes bubbleIn {
-  from { opacity: 0; transform: translateY(10px) scale(.92); }
+  from { opacity: 0; transform: translateY(6px) scale(.92); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 @media (max-width: 720px) {
-  .hero-photo { padding-top: 92px; }
-  .hero-bubble { font-size: .66rem; padding: 5px 10px; white-space: normal; max-width: 112px; text-align: center; }
-  .hero-bubble--right { top: 50px; }
+  .hero-bubble { font-size: .68rem; padding: 6px 11px; }
+  .hero-bubble--left, .hero-bubble--right { top: 50px; }
 }
 
 /* Mobile: stack photo above text */
