@@ -7,6 +7,11 @@ const PAGE_URL = `file://${path.resolve(__dirname, '../index.html')}`;
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
+async function gotoPage(page) {
+  await page.goto(PAGE_URL);
+  await page.waitForLoadState('domcontentloaded');
+}
+
 async function getScrollY(page) {
   return page.evaluate(() => window.scrollY);
 }
@@ -23,10 +28,7 @@ async function getNavBottom(page) {
 test.describe('Desktop (1440×900)', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto(PAGE_URL);
-    await page.waitForLoadState('domcontentloaded');
-  });
+  test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
   test('預設顯示「總覽」tab', async ({ page }) => {
     const active = page.locator('.tab-btn.active');
@@ -43,14 +45,13 @@ test.describe('Desktop (1440×900)', () => {
   test('點 Day tab 後不應捲到頁面頂端（scrollY 應貼近 nav 位置）', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, 600));
     await page.locator('#tab-btn-2').click();
-    await page.waitForTimeout(500);
+    await page.locator('#tab-2').waitFor({ state: 'visible' });
 
     const scrollY = await getScrollY(page);
     const navBottom = await getNavBottom(page);
 
     expect(navBottom).toBeGreaterThan(0);
     expect(navBottom).toBeLessThan(800);
-    expect(navBottom).toBeGreaterThan(0);
   });
 
   test('點 Day tab 後 active button 樣式正確', async ({ page }) => {
@@ -78,10 +79,7 @@ test.describe('Desktop (1440×900)', () => {
 test.describe('Mobile (390×844)', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto(PAGE_URL);
-    await page.waitForLoadState('domcontentloaded');
-  });
+  test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
   test('Day 2 比較卡片：預設顯示第一張（Option A）', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
@@ -106,11 +104,10 @@ test.describe('Mobile (390×844)', () => {
 
   test('Back-to-top 按鈕：捲動後出現，點擊後回頂端', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, 800));
-    await page.waitForTimeout(300);
     const btn = page.locator('#backToTop');
     await expect(btn).toBeVisible();
     await btn.click();
-    await page.waitForTimeout(600);
+    await page.waitForFunction(() => window.scrollY < 50);
     const scrollY = await getScrollY(page);
     expect(scrollY).toBeLessThan(50);
   });
@@ -121,9 +118,7 @@ test.describe('Mobile (390×844)', () => {
 test.describe('內容完整性', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto(PAGE_URL);
-  });
+  test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
   test('六個 Day tab 都存在', async ({ page }) => {
     for (let i = 1; i <= 6; i++) {
@@ -147,12 +142,31 @@ test.describe('內容完整性', () => {
       if (msg.type() === 'error') errors.push(msg.text());
     });
     await page.goto(PAGE_URL);
-    await page.waitForTimeout(500);
+    await page.waitForLoadState('load');
     expect(errors).toHaveLength(0);
   });
 });
 
 // ── WCAG 2.1 AA – axe-core ────────────────────────────────────────────────
+
+async function disableAnimations(page) {
+  await page.evaluate(() => {
+    const s = document.createElement('style');
+    s.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+    document.head.appendChild(s);
+    document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => el.classList.add('visible'));
+  });
+}
+
+async function forceVisible(page) {
+  await page.evaluate(() => {
+    document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => el.classList.add('visible'));
+  });
+}
+
+async function axeCheck(page) {
+  return new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+}
 
 for (const [label, width, height] of [
   ['Desktop 1440px', 1440, 900],
@@ -162,33 +176,27 @@ for (const [label, width, height] of [
     test.use({ viewport: { width, height } });
 
     test.beforeEach(async ({ page }) => {
-      await page.goto(PAGE_URL);
-      await page.waitForLoadState('domcontentloaded');
+      await gotoPage(page);
       // Disable all transitions/animations so scroll-reveal opacity is instant
-      await page.evaluate(() => {
-        const s = document.createElement('style');
-        s.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
-        document.head.appendChild(s);
-        document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => el.classList.add('visible'));
-      });
+      await disableAnimations(page);
     });
 
     test('總覽：無 WCAG 2.1 AA 違規', async ({ page }) => {
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa'])
-        .analyze();
+      const results = await axeCheck(page);
       expect(results.violations).toEqual([]);
     });
 
     test('Day 1：無 WCAG 2.1 AA 違規', async ({ page }) => {
       await page.locator('#tab-btn-1').click();
-      // Re-force visible for elements that re-enter rendering tree after tab switch
-      await page.evaluate(() => {
-        document.querySelectorAll('.scroll-reveal, .tip-card').forEach(el => el.classList.add('visible'));
-      });
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa'])
-        .analyze();
+      await forceVisible(page);
+      const results = await axeCheck(page);
+      expect(results.violations).toEqual([]);
+    });
+
+    test('Day 2：無 WCAG 2.1 AA 違規', async ({ page }) => {
+      await page.locator('#tab-btn-2').click();
+      await forceVisible(page);
+      const results = await axeCheck(page);
       expect(results.violations).toEqual([]);
     });
   });
@@ -199,10 +207,7 @@ for (const [label, width, height] of [
 test.describe('Semantic HTML & ARIA', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto(PAGE_URL);
-    await page.waitForLoadState('domcontentloaded');
-  });
+  test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
   test('html 有 lang 屬性', async ({ page }) => {
     const lang = await page.locator('html').getAttribute('lang');
@@ -236,10 +241,7 @@ test.describe('Semantic HTML & ARIA', () => {
 test.describe('RWD – 320px (minimum mobile)', () => {
   test.use({ viewport: { width: 320, height: 568 } });
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto(PAGE_URL);
-    await page.waitForLoadState('domcontentloaded');
-  });
+  test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
   test('頁面無水平溢出', async ({ page }) => {
     const scrollWidth = await page.evaluate(() => document.body.scrollWidth);
@@ -259,10 +261,7 @@ test.describe('RWD – 320px (minimum mobile)', () => {
 test.describe('觸控目標 – 全部 button (390px)', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto(PAGE_URL);
-    await page.waitForLoadState('domcontentloaded');
-  });
+  test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
   test('所有 <button> 高度 ≥ 44px', async ({ page }) => {
     const btns = await page.locator('button').evaluateAll(els =>

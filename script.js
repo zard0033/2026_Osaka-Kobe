@@ -28,16 +28,12 @@ function switchTab(idx) {
   if (goingBack) outgoing.classList.add('go-back');
   outgoing.classList.add('tab-leaving');
   outgoing.classList.remove('active');
-  outgoing.addEventListener('animationend', () => {
-    outgoing.classList.remove('tab-leaving', 'go-back');
-  }, { once: true });
+  onAnimEnd(outgoing, () => outgoing.classList.remove('tab-leaving', 'go-back'));
 
   const incoming = panels[idx];
   if (goingBack) incoming.classList.add('go-back');
   incoming.classList.add('active');
-  incoming.addEventListener('animationend', () => {
-    incoming.classList.remove('go-back');
-  }, { once: true });
+  onAnimEnd(incoming, () => incoming.classList.remove('go-back'));
 
   currentTab = idx;
   window.scrollTo({ top: document.querySelector('.tabs-nav-wrapper').offsetTop, behavior: 'instant' });
@@ -70,7 +66,7 @@ const optPanels = document.querySelectorAll('.option-panel');
 const compCards = document.querySelectorAll('.comp-card');
 const compDots  = document.querySelectorAll('.comp-dot');
 const compGrid  = document.querySelector('.comparison-grid');
-let currentOpt = 0;
+let currentOpt = -1;
 let optScrollLock = false;
 
 function switchOption(idx, { scroll = false } = {}) {
@@ -88,13 +84,26 @@ function switchOption(idx, { scroll = false } = {}) {
     setTimeout(() => { optScrollLock = false; }, 450);
   }
 }
-// initialise selected state without animating
-optPanels.forEach((p, i) => p.classList.toggle('active', i === 0));
-compCards.forEach((c, i) => c.classList.toggle('selected', i === 0));
-compDots.forEach((d, i) => d.classList.toggle('active', i === 0));
+switchOption(0);
 
 compCards.forEach((card, i) => card.addEventListener('click', () => switchOption(i, { scroll: true })));
 compDots.forEach((dot, i)   => dot.addEventListener('click', () => switchOption(i, { scroll: true })));
+
+function onAnimEnd(el, fn) {
+  let done = false;
+  const run = () => { if (!done) { done = true; fn(); } };
+  el.addEventListener('animationend', run, { once: true });
+  setTimeout(run, 400);
+}
+
+function onScrollSettled(el, fn, delay = 50) {
+  el.addEventListener('scrollend', fn, { passive: true });
+  let timer;
+  el.addEventListener('scroll', () => {
+    clearTimeout(timer);
+    timer = setTimeout(fn, delay);
+  }, { passive: true });
+}
 
 // Mobile: auto-switch panel based on which card is centered after swipe
 if (compGrid) {
@@ -110,13 +119,7 @@ if (compGrid) {
     });
     if (nearest !== currentOpt) switchOption(nearest);
   }
-  compGrid.addEventListener('scrollend', syncOptFromScroll, { passive: true });
-  let scrollTimer;
-  compGrid.addEventListener('scroll', () => {
-    if (optScrollLock || !mqMobile.matches) return;
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(syncOptFromScroll, 50);
-  }, { passive: true });
+  onScrollSettled(compGrid, syncOptFromScroll);
 }
 
 // ── Mobile: sync tab buttons after native swipe ──
@@ -128,13 +131,7 @@ if (tabsContainer) {
       switchTab(nearest);
     }
   }
-  tabsContainer.addEventListener('scrollend', syncTabFromScroll, { passive: true });
-  let tabSyncTimer;
-  tabsContainer.addEventListener('scroll', () => {
-    if (!mqMobile.matches) return;
-    clearTimeout(tabSyncTimer);
-    tabSyncTimer = setTimeout(syncTabFromScroll, 50);
-  }, { passive: true });
+  onScrollSettled(tabsContainer, syncTabFromScroll);
 }
 
 // ── Back to top ──
@@ -150,7 +147,7 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       const idx = tipCards.indexOf(entry.target);
-      setTimeout(() => entry.target.classList.add('visible'), idx >= 0 ? idx * 80 : 0);
+      setTimeout(() => entry.target.classList.add('visible'), Math.max(idx, 0) * 80);
       observer.unobserve(entry.target);
     }
   });
@@ -165,10 +162,10 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
     const isOpen = btn.getAttribute('aria-expanded') === 'true';
     if (isOpen) {
       detail.classList.add('closing');
-      detail.addEventListener('animationend', () => {
+      onAnimEnd(detail, () => {
         detail.classList.remove('open', 'closing');
         btn.setAttribute('aria-expanded', 'false');
-      }, { once: true });
+      });
     } else {
       btn.setAttribute('aria-expanded', 'true');
       detail.classList.add('open');
@@ -201,5 +198,7 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
   }, { passive: true });
 })();
 
-const hotelNearbyHTML = '<a class="shop-chip" href="https://maps.app.goo.gl/unqG9iwtaWhF83cx6" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🎡</span><span>唐吉軻德</span></a><a class="shop-chip" href="https://maps.google.com/?q=KOHYO+内本町+大阪市中央区" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🛒</span><span>KOHYO 内本町店</span></a><a class="shop-chip" href="https://maps.app.goo.gl/iivNzBHJMspLqsDu9" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🛒</span><span>Izumiya</span></a>';
-document.querySelectorAll('.hotel-nearby').forEach(el => el.innerHTML = hotelNearbyHTML);
+const hotelNearbyTpl = document.getElementById('hotel-nearby-tpl');
+document.querySelectorAll('.hotel-nearby').forEach(el =>
+  el.appendChild(hotelNearbyTpl.content.cloneNode(true))
+);
