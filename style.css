@@ -714,11 +714,17 @@ details.cost-group-collapsible > summary {
 }
 details.cost-group-collapsible > summary::-webkit-details-marker { display: none; }
 .cost-summary-chevron {
-  font-size: .72rem; color: var(--brown-light);
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-right: 1.5px solid var(--brown-light);
+  border-top: 1.5px solid var(--brown-light);
+  transform: rotate(135deg);
   transition: transform 200ms var(--ease-out);
-  flex-shrink: 0; margin-left: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  position: relative; top: -1px;
 }
-details.cost-group-collapsible[open] .cost-summary-chevron { transform: rotate(180deg); }
+details.cost-group-collapsible[open] .cost-summary-chevron { transform: rotate(-45deg); top: 1px; }
 details.cost-group-collapsible[open] { border-bottom: 1px solid var(--brown-pale); }
 .cost-list > details.cost-group-collapsible:last-child { border-bottom: none; }
 .cost-row.cost-row-sub {
@@ -732,6 +738,7 @@ details.cost-group-collapsible[open] { border-bottom: 1px solid var(--brown-pale
 
 /* ── TIPS ── */
 .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.tip-card a { text-decoration: underline; text-underline-offset: 2px; }
 .tip-card {
   background: var(--white);
   border-radius: var(--r-md);
