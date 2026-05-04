@@ -80,7 +80,15 @@ function switchOption(idx, { scroll = false } = {}) {
   });
   if (scroll && compGrid && mqMobile.matches) {
     optScrollLock = true;
-    compCards[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    const card = compCards[idx];
+    const gridRect = compGrid.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const delta = (cardRect.left + cardRect.width / 2) - (gridRect.left + gridRect.width / 2);
+    compGrid.scrollBy({ left: delta, behavior: 'smooth' });
+    // Prevent the browser's focus-scroll from nudging the outer tab container
+    requestAnimationFrame(() => {
+      tabsContainer.scrollLeft = currentTab * tabsContainer.clientWidth;
+    });
     setTimeout(() => { optScrollLock = false; }, 450);
   }
 }
