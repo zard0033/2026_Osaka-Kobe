@@ -210,3 +210,43 @@ const hotelNearbyTpl = document.getElementById('hotel-nearby-tpl');
 document.querySelectorAll('.hotel-nearby').forEach(el =>
   el.appendChild(hotelNearbyTpl.content.cloneNode(true))
 );
+
+// ── Live weather (Open-Meteo) ──
+(function fetchWeather() {
+  const WMO_EMOJI = {
+    0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+    45: '🌫️', 48: '🌫️',
+    51: '🌦️', 53: '🌦️', 55: '🌧️',
+    61: '🌧️', 63: '🌧️', 65: '🌧️',
+    71: '🌨️', 73: '🌨️', 75: '🌨️',
+    80: '🌦️', 81: '🌦️', 82: '🌧️',
+    95: '⛈️', 96: '⛈️', 99: '⛈️',
+  };
+  const TRIP_START = '2026-05-16';
+  const TRIP_END   = '2026-05-21';
+
+  fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=34.6937&longitude=135.5023` +
+    `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
+    `&timezone=Asia%2FTokyo&start_date=${TRIP_START}&end_date=${TRIP_END}`
+  )
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(data => {
+      if (!data?.daily) return;
+      const { weather_code, temperature_2m_max, temperature_2m_min, precipitation_probability_max } = data.daily;
+      for (let i = 0; i < 6; i++) {
+        const panel = document.getElementById(`tab-${i + 1}`);
+        if (!panel) continue;
+        const weatherEl = panel.querySelector('.day-weather-main');
+        const rainEl    = panel.querySelector('.day-rain');
+        if (!weatherEl || !rainEl) continue;
+        const emoji = WMO_EMOJI[weather_code[i]] ?? '🌤️';
+        const hi    = Math.round(temperature_2m_max[i]);
+        const lo    = Math.round(temperature_2m_min[i]);
+        const rain  = precipitation_probability_max[i] ?? 0;
+        weatherEl.innerHTML = `${emoji} ${hi}°C <span class="day-weather-lo">/ ${lo}°C</span>`;
+        rainEl.textContent  = `💧 ${rain}%`;
+      }
+    });
+}());
