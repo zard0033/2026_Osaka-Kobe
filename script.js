@@ -125,13 +125,7 @@ if (tabsContainer) {
     if (!mqMobile.matches) return;
     const nearest = Math.round(tabsContainer.scrollLeft / tabsContainer.clientWidth);
     if (nearest !== currentTab && nearest >= 0 && nearest < panels.length) {
-      currentTab = nearest;
-      tabBtns.forEach((b, i) => {
-        b.classList.toggle('active', i === nearest);
-        b.setAttribute('aria-selected', i === nearest ? 'true' : 'false');
-        b.setAttribute('tabindex', i === nearest ? '0' : '-1');
-      });
-      tabBtns[nearest].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      switchTab(nearest);
     }
   }
   tabsContainer.addEventListener('scrollend', syncTabFromScroll, { passive: true });
@@ -206,3 +200,6 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
     tabBtns[next].focus();
   }, { passive: true });
 })();
+
+const hotelNearbyHTML = '<a class="shop-chip" href="https://maps.app.goo.gl/unqG9iwtaWhF83cx6" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🎡</span><span>唐吉軻德</span></a><a class="shop-chip" href="https://maps.google.com/?q=KOHYO+内本町+大阪市中央区" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🛒</span><span>KOHYO 内本町店</span></a><a class="shop-chip" href="https://maps.app.goo.gl/iivNzBHJMspLqsDu9" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🛒</span><span>Izumiya</span></a>';
+document.querySelectorAll('.hotel-nearby').forEach(el => el.innerHTML = hotelNearbyHTML);
