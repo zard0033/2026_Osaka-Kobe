@@ -124,14 +124,14 @@ test.describe('內容完整性', () => {
     }
   });
 
-  test('D2 包含 北野異人館 關鍵字', async ({ page }) => {
+  test('D2 包含 生田神社 關鍵字', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('北野異人館');
+    await expect(page.locator('#tab-2')).toContainText('生田神社');
   });
 
-  test('D2 包含 和黑 北野坂本店 關鍵字', async ({ page }) => {
+  test('D2 包含 焼肉 神戸十番 關鍵字', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('和黑 北野坂本店');
+    await expect(page.locator('#tab-2')).toContainText('焼肉 神戸十番');
   });
 
   test('頁面沒有 console error', async ({ page }) => {
