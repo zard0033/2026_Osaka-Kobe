@@ -81,16 +81,14 @@ test.describe('Mobile (390×844)', () => {
 
   test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
-  test('Day 2 比較卡片：預設顯示第一張（Option A）', async ({ page }) => {
+  test('Day 2 顯示神戶一日遊行程', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#opt-0')).toHaveClass(/active/);
+    await expect(page.locator('#tab-2')).toContainText('神戶一日遊');
   });
 
-  test('Day 2 切換 Option B → option panel 顯示 B 內容', async ({ page }) => {
+  test('Day 2 包含 Meriken Park 關鍵字', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
-    const cards = page.locator('.comp-card');
-    await cards.nth(1).click();
-    await expect(page.locator('#opt-1')).toHaveClass(/active/);
+    await expect(page.locator('#tab-2')).toContainText('Meriken Park');
   });
 
   test('觸控目標：所有 tab-btn 高度 ≥ 44px', async ({ page }) => {
@@ -126,14 +124,14 @@ test.describe('內容完整性', () => {
     }
   });
 
-  test('D2 包含 ookini 著物レンタル 關鍵字', async ({ page }) => {
+  test('D2 包含 北野異人館 關鍵字', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('ookini');
+    await expect(page.locator('#tab-2')).toContainText('北野異人館');
   });
 
-  test('D2 包含 清水寺 關鍵字', async ({ page }) => {
+  test('D2 包含 和黑 北野坂本店 關鍵字', async ({ page }) => {
     await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('清水寺');
+    await expect(page.locator('#tab-2')).toContainText('和黑 北野坂本店');
   });
 
   test('頁面沒有 console error', async ({ page }) => {
@@ -145,6 +143,17 @@ test.describe('內容完整性', () => {
     await page.waitForLoadState('load');
     expect(errors).toHaveLength(0);
   });
+
+  test('D2–D5 day-header 含 餘裕 chip', async ({ page }) => {
+    for (const i of [2, 3, 4, 5]) {
+      await page.locator(`#tab-btn-${i}`).click();
+      const chip = page.locator(`#tab-${i} .day-chip-buffer`).first();
+      await expect(chip).toBeVisible();
+      await expect(chip).toContainText('餘裕');
+      await expect(chip).toContainText('分');
+    }
+  });
+
 });
 
 // ── WCAG 2.1 AA – axe-core ────────────────────────────────────────────────

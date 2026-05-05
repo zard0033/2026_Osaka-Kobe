@@ -5,6 +5,17 @@ const tabsContainer = document.querySelector('.tabs-panels .container');
 const mqMobile = window.matchMedia('(max-width: 600px)');
 let currentTab = 0;
 
+function syncMobileHeight() {
+  if (!mqMobile.matches) return;
+  const pos = tabsContainer.scrollLeft / tabsContainer.clientWidth;
+  const i1 = Math.max(0, Math.floor(pos));
+  const i2 = Math.min(panels.length - 1, i1 + 1);
+  const frac = pos - i1;
+  const h1 = panels[i1].scrollHeight;
+  const h2 = panels[i2].scrollHeight;
+  tabsContainer.style.height = Math.round(h1 + (h2 - h1) * frac) + 'px';
+}
+
 function switchTab(idx) {
   if (idx === currentTab) return;
   const goingBack = idx < currentTab;
@@ -20,6 +31,7 @@ function switchTab(idx) {
     // Mobile: native scroll-snap handles the visual transition
     currentTab = idx;
     tabsContainer.scrollTo({ left: idx * tabsContainer.clientWidth, behavior: 'smooth' });
+    syncMobileHeight();
     return;
   }
 
@@ -61,42 +73,6 @@ tabsNav.addEventListener('scroll', () => {
   tabsNavContainer.classList.toggle('scrolled-end', atEnd);
 }, { passive: true });
 
-// ── Option sub-tabs (Day 2) ──
-const optPanels = document.querySelectorAll('.option-panel');
-const compCards = document.querySelectorAll('.comp-card');
-const compDots  = document.querySelectorAll('.comp-dot');
-const compGrid  = document.querySelector('.comparison-grid');
-let currentOpt = -1;
-let optScrollLock = false;
-
-function switchOption(idx, { scroll = false } = {}) {
-  if (idx === currentOpt) return;
-  currentOpt = idx;
-  optPanels.forEach((p, i) => p.classList.toggle('active', i === idx));
-  compCards.forEach((c, i) => c.classList.toggle('selected', i === idx));
-  compDots.forEach((d, i) => {
-    d.classList.toggle('active', i === idx);
-    d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
-  });
-  if (scroll && compGrid && mqMobile.matches) {
-    optScrollLock = true;
-    const card = compCards[idx];
-    const gridRect = compGrid.getBoundingClientRect();
-    const cardRect = card.getBoundingClientRect();
-    const delta = (cardRect.left + cardRect.width / 2) - (gridRect.left + gridRect.width / 2);
-    compGrid.scrollBy({ left: delta, behavior: 'smooth' });
-    // Prevent the browser's focus-scroll from nudging the outer tab container
-    requestAnimationFrame(() => {
-      tabsContainer.scrollLeft = currentTab * tabsContainer.clientWidth;
-    });
-    setTimeout(() => { optScrollLock = false; }, 450);
-  }
-}
-switchOption(0);
-
-compCards.forEach((card, i) => card.addEventListener('click', () => switchOption(i, { scroll: true })));
-compDots.forEach((dot, i)   => dot.addEventListener('click', () => switchOption(i, { scroll: true })));
-
 function onAnimEnd(el, fn) {
   let done = false;
   const run = () => { if (!done) { done = true; fn(); } };
@@ -113,23 +89,6 @@ function onScrollSettled(el, fn, delay = 50) {
   }, { passive: true });
 }
 
-// Mobile: auto-switch panel based on which card is centered after swipe
-if (compGrid) {
-  function syncOptFromScroll() {
-    if (optScrollLock || !mqMobile.matches) return;
-    const gridRect = compGrid.getBoundingClientRect();
-    const center = gridRect.left + gridRect.width / 2;
-    let nearest = 0, best = Infinity;
-    compCards.forEach((card, i) => {
-      const r = card.getBoundingClientRect();
-      const d = Math.abs(r.left + r.width / 2 - center);
-      if (d < best) { best = d; nearest = i; }
-    });
-    if (nearest !== currentOpt) switchOption(nearest);
-  }
-  onScrollSettled(compGrid, syncOptFromScroll);
-}
-
 // ── Mobile: sync tab buttons after native swipe ──
 if (tabsContainer) {
   function syncTabFromScroll() {
@@ -140,7 +99,16 @@ if (tabsContainer) {
     }
   }
   onScrollSettled(tabsContainer, syncTabFromScroll);
+  tabsContainer.addEventListener('scroll', syncMobileHeight, { passive: true });
 }
+
+// ── Mobile: sync container height on init and resize ──
+syncMobileHeight();
+mqMobile.addEventListener('change', () => {
+  if (mqMobile.matches) syncMobileHeight();
+  else tabsContainer.style.height = '';
+});
+window.addEventListener('resize', syncMobileHeight, { passive: true });
 
 // ── Back to top ──
 const backToTop = document.getElementById('backToTop');
@@ -150,12 +118,13 @@ window.addEventListener('scroll', () => {
 backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 // ── IntersectionObserver for scroll reveals ──
+const STAGGER_MS = 80;
 const tipCards = [...document.querySelectorAll('.tip-card')];
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       const idx = tipCards.indexOf(entry.target);
-      setTimeout(() => entry.target.classList.add('visible'), Math.max(idx, 0) * 80);
+      setTimeout(() => entry.target.classList.add('visible'), Math.max(idx, 0) * STAGGER_MS);
       observer.unobserve(entry.target);
     }
   });
@@ -195,7 +164,6 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
 
   panelsEl.addEventListener('touchend', e => {
     if (mqMobile.matches) return;
-    if (e.target.closest('.comparison-grid')) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
     if (Math.abs(dx) < THRESHOLD || Math.abs(dy) > Math.abs(dx)) return;
@@ -211,6 +179,36 @@ document.querySelectorAll('.hotel-nearby').forEach(el =>
   el.appendChild(hotelNearbyTpl.content.cloneNode(true))
 );
 
+// ── Last updated timestamp ──
+(function setLastUpdated() {
+  const el = document.getElementById('last-updated');
+  if (!el) return;
+  const lm = document.lastModified; // "MM/DD/YYYY HH:MM:SS"
+  if (!lm) return;
+  const [datePart, timePart] = lm.split(' ');
+  if (!datePart || !timePart) return;
+  const [m, d, y] = datePart.split('/');
+  const [h, min] = timePart.split(':');
+  el.textContent = `${y}/${m}/${d} ${h}:${min}`;
+}());
+
+// ── Fetch helper: returns parsed JSON or null on any failure ──
+const fetchJson = (url) =>
+  fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
+
+// ── Live exchange rate (exchangerate-api.com) ──
+(function fetchRate() {
+  fetchJson('https://api.exchangerate-api.com/v4/latest/JPY').then(data => {
+    const twd = data?.rates?.TWD;
+    if (!twd) return;
+    const rate = twd.toFixed(2);
+    const display = document.getElementById('rate-display');
+    const footer  = document.getElementById('rate-footer');
+    if (display) display.textContent = `¥1 ≈ NT$${rate}`;
+    if (footer)  footer.textContent  = rate;
+  });
+}());
+
 // ── Live weather (Open-Meteo) ──
 (function fetchWeather() {
   const WMO_EMOJI = {
@@ -224,15 +222,17 @@ document.querySelectorAll('.hotel-nearby').forEach(el =>
   };
   const TRIP_START = '2026-05-16';
   const TRIP_END   = '2026-05-21';
+  // Open-Meteo free tier: max 15 days ahead. Cap end_date so the request never fails.
+  const cap = new Date();
+  cap.setDate(cap.getDate() + 15);
+  const capStr = cap.toISOString().split('T')[0];
+  const effectiveEnd = capStr < TRIP_END ? capStr : TRIP_END;
 
-  fetch(
+  fetchJson(
     `https://api.open-meteo.com/v1/forecast?latitude=34.6937&longitude=135.5023` +
     `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-    `&timezone=Asia%2FTokyo&start_date=${TRIP_START}&end_date=${TRIP_END}`
-  )
-    .then(r => r.ok ? r.json() : null)
-    .catch(() => null)
-    .then(data => {
+    `&timezone=Asia%2FTokyo&start_date=${TRIP_START}&end_date=${effectiveEnd}`
+  ).then(data => {
       if (!data?.daily) return;
       const { weather_code, temperature_2m_max, temperature_2m_min, precipitation_probability_max } = data.daily;
       for (let i = 0; i < 6; i++) {
