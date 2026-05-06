@@ -6,43 +6,58 @@
 <title>2026 關西 6天5夜｜奕承 & 沛書 的旅行</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Kalam:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- ══ HERO ══ -->
 <header class="hero">
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-badge"><span class="badge-heart">♥</span> <span>2026 關西之旅</span></div>
-      <h1 class="hero-title">
-        <span class="title-name">奕承 &amp; 沛書</span>
-        <span class="title-dest">的大阪旅行</span>
-      </h1>
-      <div class="hero-divider" aria-hidden="true"></div>
-      <p class="hero-subtitle">「和你在一起，每一站都是最美的風景」</p>
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <span class="label">出發</span>
-          <span class="val">2026/05/16</span>
-        </div>
-        <div class="hero-meta-item">
-          <span class="label">返台</span>
-          <span class="val">2026/05/21</span>
-        </div>
-        <div class="hero-meta-item">
-          <span class="label">天數</span>
-          <span class="val">6 天 5 夜</span>
-        </div>
-      </div>
-    </div>
-    <div class="hero-photo">
-<img src="images/cover.jpg" alt="奕承 &amp; 沛書" class="hero-couple-img">
-    </div>
+  <h1 class="visually-hidden">2026 關西 6 天 5 夜｜奕承 &amp; 沛書 的大阪旅行</h1>
+
+  <div class="hero-stage">
+    <figure class="hero-pic" style="--r:-3.5deg;--ty:18px">
+      <img src="images/cover2.jpg" alt="奕承 &amp; 沛書 漫畫風合照（接吻）" loading="eager">
+      <figcaption>kiss me ♡</figcaption>
+    </figure>
+    <figure class="hero-pic" style="--r:2.5deg;--ty:0">
+      <img src="images/cover4.jpg" alt="奕承 &amp; 沛書 漫畫風合照（自拍）" loading="eager" fetchpriority="high">
+      <figcaption>us, ready to go</figcaption>
+    </figure>
+    <figure class="hero-pic" style="--r:-1.5deg;--ty:28px">
+      <img src="images/cover3.jpg" alt="奕承 &amp; 沛書 漫畫風合照（依偎）" loading="eager">
+      <figcaption>cozy days ♡</figcaption>
+    </figure>
+    <figure class="hero-pic" style="--r:4deg;--ty:8px">
+      <img src="images/cover5.jpg" alt="奕承 &amp; 沛書 漫畫風合照（比 V）" loading="eager">
+      <figcaption>peace ✌</figcaption>
+    </figure>
   </div>
+
+  <div class="hero-pass" aria-label="旅行資訊">
+    <span class="pass-eyebrow"><span aria-hidden="true">—</span> 2026 spring <span aria-hidden="true">—</span></span>
+    <p class="pass-title">
+      <span class="pass-title-en">OSAKA</span>
+      <span class="pass-title-dot" aria-hidden="true">·</span>
+      <span class="pass-title-zh">大阪</span>
+    </p>
+    <div class="pass-dates">
+      <time class="pass-date" datetime="2026-05-16">2026 / 05 / 16</time>
+      <span class="pass-arrow" aria-hidden="true">
+        <svg viewBox="0 0 96 14" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 8 Q 16 4, 30 8" />
+          <path d="M40 4 L 56 8 L 40 12 Z M 56 8 L 50 8" fill="currentColor" />
+          <path d="M66 8 Q 80 12, 94 8" />
+        </svg>
+      </span>
+      <time class="pass-date" datetime="2026-05-21">2026 / 05 / 21</time>
+    </div>
+    <span class="pass-meta">六 天 五 夜</span>
+  </div>
+
   <div class="hero-scroll" aria-hidden="true">
-    <span class="hero-scroll-label">向下滑動</span>
+    <span class="hero-scroll-label">scroll</span>
     <span></span>
   </div>
 </header>
@@ -74,8 +89,8 @@
             <div class="ov-key">旅遊天數</div>
           </div>
           <div class="ov-stat ov-stat-hi">
-            <div class="ov-val">NT$84,926</div>
-            <div class="ov-key">預估總預算</div>
+            <div class="ov-val" id="trip-total">NT$43,347</div>
+            <div class="ov-key">預估總預算 / 人</div>
           </div>
           <div class="ov-stat">
             <div class="ov-val" id="rate-display" style="white-space:nowrap">¥1 ≈ NT$0.20</div>
@@ -88,173 +103,173 @@
             <div class="pie-wrapper">
               <div class="pie-chart"></div>
               <div class="pie-hole">
-                <div class="pie-hole-amt">NT$<br>84,693</div>
-                <div class="pie-hole-sub">預估合計</div>
+                <div class="pie-hole-amt" id="pie-hole-amt">NT$<br>43,347</div>
+                <div class="pie-hole-sub">每人合計</div>
               </div>
             </div>
             <div class="pie-legend">
-              <div class="leg-item"><span class="leg-dot" style="background:#99463A"></span><span>機票 29.4%</span></div>
-              <div class="leg-item"><span class="leg-dot" style="background:#D4895F"></span><span>餐飲 20.6%</span></div>
-              <div class="leg-item"><span class="leg-dot" style="background:#C4A882"></span><span>住宿 15.2%</span></div>
-              <div class="leg-item"><span class="leg-dot" style="background:#6E2B22"></span><span>USJ 12.7%</span></div>
-              <div class="leg-item"><span class="leg-dot" style="background:#D4B896"></span><span>購物 10.8%</span></div>
-              <div class="leg-item"><span class="leg-dot" style="background:#A0785A"></span><span>交通 6.5%</span></div>
-              <div class="leg-item"><span class="leg-dot" style="background:#8B6355"></span><span>雜費 3.4%</span></div>
-              <div class="leg-item"><span class="leg-dot" style="background:#CFBFB5"></span><span>景點 1.5%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#99463A"></span><span id="pie-flights">機票 29.4%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#D4895F"></span><span id="pie-meals">餐飲 20.6%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#C4A882"></span><span id="pie-hotel">住宿 15.2%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#6E2B22"></span><span id="pie-usj">USJ 12.7%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#D4B896"></span><span id="pie-shopping">購物 10.8%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#A0785A"></span><span id="pie-transit">交通 6.5%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#8B6355"></span><span id="pie-misc">雜費 3.4%</span></div>
+              <div class="leg-item"><span class="leg-dot" style="background:#CFBFB5"></span><span id="pie-attractions">景點 1.5%</span></div>
             </div>
           </div>
           <div class="ov-list-col">
             <div class="cost-list">
               <div class="cost-group-hd">
                 <span>行前固定費用</span>
-                <span class="cost-group-hd-amt">NT$42,608</span>
-              </div>
-              <div class="cost-row">
-                <span class="cost-row-icon">✈️</span>
-                <div class="cost-row-body">
-                  <div class="cost-row-label">機票（2人）</div>
-                  <div class="cost-row-note">CX564 / CX565 ✅</div>
-                </div>
-                <span class="cost-row-amt">NT$25,000</span>
-              </div>
-              <div class="cost-row">
-                <span class="cost-row-icon">🏨</span>
-                <div class="cost-row-body">
-                  <div class="cost-row-label">住宿 5 晚（路德飯店）</div>
-                  <div class="cost-row-note">NT$6,463/人 ✅</div>
-                </div>
-                <span class="cost-row-amt">NT$12,926</span>
+                <span class="cost-group-hd-amt" id="fixed-total">NT$22,304</span>
               </div>
               <details class="cost-group-collapsible">
                 <summary class="cost-row cost-row-summary">
-                  <span class="cost-row-icon">🌐</span>
+                  <span class="cost-row-icon">✈️</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">通訊 &amp; 雜費（2人）<span class="cost-summary-chevron" aria-hidden="true"></span></div>
-                    <div class="cost-row-note">eSIM・備用金・藥品</div>
+                    <div class="cost-row-label">交通<span class="cost-summary-chevron" aria-hidden="true"></span></div>
+                    <div class="cost-row-note">機票・包車・高鐵</div>
                   </div>
-                  <span class="cost-row-amt">NT$2,888</span>
+                  <span class="cost-row-amt">NT$13,397</span>
                 </summary>
                 <div class="cost-row cost-row-sub">
-                  <span class="cost-row-icon">💰</span>
+                  <span class="cost-row-icon">✈️</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">旅行雜費（2人）</div>
-                    <div class="cost-row-note">備用金・藥品・保險等</div>
+                    <div class="cost-row-label">機票</div>
+                    <div class="cost-row-note">CX564 / CX565 ✅</div>
                   </div>
-                  <span class="cost-row-amt">NT$2,000</span>
+                  <span class="cost-row-amt fixed-cost" data-ntd="12500">NT$12,500</span>
                 </div>
-                <div class="cost-row cost-row-sub">
-                  <span class="cost-row-icon">🌐</span>
-                  <div class="cost-row-body">
-                    <div class="cost-row-label">eSIM（2人）</div>
-                    <div class="cost-row-note">NT$444/人 ✅</div>
-                  </div>
-                  <span class="cost-row-amt">NT$888</span>
-                </div>
-              </details>
-              <details class="cost-group-collapsible">
-                <summary class="cost-row cost-row-summary">
-                  <span class="cost-row-icon">🚆</span>
-                  <div class="cost-row-body">
-                    <div class="cost-row-label">台灣交通（2人）<span class="cost-summary-chevron" aria-hidden="true"></span></div>
-                    <div class="cost-row-note">包車・高鐵</div>
-                  </div>
-                  <span class="cost-row-amt">NT$1,794</span>
-                </summary>
                 <div class="cost-row cost-row-sub">
                   <span class="cost-row-icon">🚗</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">包車 台中→桃園機場（2人）</div>
-                    <div class="cost-row-note">NT$467/人 ✅</div>
+                    <div class="cost-row-label">包車 台中→桃園機場</div>
+                    <div class="cost-row-note">2 人共乘分攤 ✅</div>
                   </div>
-                  <span class="cost-row-amt">NT$934</span>
+                  <span class="cost-row-amt fixed-cost" data-ntd="467" data-cat="transit">NT$467</span>
                 </div>
                 <div class="cost-row cost-row-sub">
                   <span class="cost-row-icon">🚅</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">高鐵 返台（2人）</div>
-                    <div class="cost-row-note">NT$430/人 ✅</div>
+                    <div class="cost-row-label">高鐵 返台</div>
+                    <div class="cost-row-note">已購 ✅</div>
                   </div>
-                  <span class="cost-row-amt">NT$860</span>
+                  <span class="cost-row-amt fixed-cost" data-ntd="430" data-cat="transit">NT$430</span>
+                </div>
+              </details>
+              <div class="cost-row">
+                <span class="cost-row-icon">🏨</span>
+                <div class="cost-row-body">
+                  <div class="cost-row-label">住宿 5 晚（路德飯店）</div>
+                  <div class="cost-row-note">5 晚分攤後價格 ✅</div>
+                </div>
+                <span class="cost-row-amt fixed-cost" data-ntd="6463">NT$6,463</span>
+              </div>
+              <details class="cost-group-collapsible">
+                <summary class="cost-row cost-row-summary">
+                  <span class="cost-row-icon">🌐</span>
+                  <div class="cost-row-body">
+                    <div class="cost-row-label">通訊 &amp; 雜費<span class="cost-summary-chevron" aria-hidden="true"></span></div>
+                    <div class="cost-row-note">eSIM・Suica</div>
+                  </div>
+                  <span class="cost-row-amt" id="fixed-misc-total">NT$2,444</span>
+                </summary>
+                <div class="cost-row cost-row-sub">
+                  <span class="cost-row-icon">🌐</span>
+                  <div class="cost-row-body">
+                    <div class="cost-row-label">eSIM</div>
+                    <div class="cost-row-note">已購 ✅</div>
+                  </div>
+                  <span class="cost-row-amt fixed-cost" data-ntd="444" data-cat="misc">NT$444</span>
+                </div>
+                <div class="cost-row cost-row-sub">
+                  <span class="cost-row-icon">💳</span>
+                  <div class="cost-row-body">
+                    <div class="cost-row-label">Suica 儲值</div>
+                    <div class="cost-row-note">¥10,000 / 人</div>
+                  </div>
+                  <span class="cost-row-amt fixed-cost jpy-amt" data-jpy="10000" data-cat="misc">NT$2,000</span>
                 </div>
               </details>
               <div class="cost-group-hd">
                 <span>當地花費</span>
-                <span class="cost-group-hd-amt">NT$42,085</span>
+                <span class="cost-group-hd-amt" id="local-total">NT$21,043</span>
               </div>
               <div class="cost-row">
                 <span class="cost-row-icon">🍜</span>
                 <div class="cost-row-body">
-                  <div class="cost-row-label">餐飲（6天 2人）</div>
-                  <div class="cost-row-note">¥87,600 估算，約 NT$1,460 / 天 / 人</div>
+                  <div class="cost-row-label">餐飲（6天）</div>
+                  <div class="cost-row-note">各日加總</div>
                 </div>
-                <span class="cost-row-amt">NT$17,520</span>
+                <span class="cost-row-amt" id="ovr-meals">NT$8,760</span>
               </div>
               <div class="cost-row">
                 <span class="cost-row-icon">🎢</span>
                 <div class="cost-row-body">
-                  <div class="cost-row-label">USJ 門票（2人）</div>
-                  <div class="cost-row-note">¥27,101/人 ✅</div>
+                  <div class="cost-row-label">USJ 門票</div>
+                  <div class="cost-row-note">¥27,101 ✅</div>
                 </div>
-                <span class="cost-row-amt">NT$10,840</span>
+                <span class="cost-row-amt" id="ovr-usj">NT$5,420</span>
               </div>
               <div class="cost-row">
                 <span class="cost-row-icon">🛍️</span>
                 <div class="cost-row-body">
-                  <div class="cost-row-label">購物（2人）</div>
-                  <div class="cost-row-note">¥46,000 估算</div>
+                  <div class="cost-row-label">購物</div>
+                  <div class="cost-row-note">¥23,000 估算</div>
                 </div>
-                <span class="cost-row-amt">NT$9,200</span>
+                <span class="cost-row-amt jpy-amt" data-jpy="23000">NT$4,600</span>
               </div>
               <details class="cost-group-collapsible">
                 <summary class="cost-row cost-row-summary">
                   <span class="cost-row-icon">🚆</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">當地交通（2人）<span class="cost-summary-chevron" aria-hidden="true"></span></div>
+                    <div class="cost-row-label">當地交通<span class="cost-summary-chevron" aria-hidden="true"></span></div>
                     <div class="cost-row-note">地鐵・Haruka</div>
                   </div>
-                  <span class="cost-row-amt">NT$3,728</span>
+                  <span class="cost-row-amt" id="ovr-transit">NT$1,864</span>
                 </summary>
                 <div class="cost-row cost-row-sub">
                   <span class="cost-row-icon">🚇</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">地鐵（6天 2人）</div>
-                    <div class="cost-row-note">¥13,500 估算</div>
+                    <div class="cost-row-label">地鐵（6天）</div>
+                    <div class="cost-row-note">各日加總</div>
                   </div>
-                  <span class="cost-row-amt">NT$2,700</span>
+                  <span class="cost-row-amt" id="ovr-transit-metro">NT$1,350</span>
                 </div>
                 <div class="cost-row cost-row-sub">
                   <span class="cost-row-icon">🚆</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">Haruka 來回（2人）</div>
-                    <div class="cost-row-note">D1 + D6 各 NT$257/人（Klook）✅</div>
+                    <div class="cost-row-label">Haruka 來回</div>
+                    <div class="cost-row-note">D1 + D6 各 NT$257（Klook）✅</div>
                   </div>
-                  <span class="cost-row-amt">NT$1,028</span>
+                  <span class="cost-row-amt" id="ovr-transit-haruka">NT$514</span>
                 </div>
               </details>
               <details class="cost-group-collapsible">
                 <summary class="cost-row cost-row-summary">
                   <span class="cost-row-icon">🎟️</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">景點門票（2人）<span class="cost-summary-chevron" aria-hidden="true"></span></div>
-                    <div class="cost-row-note">藍天大廈・D2 神戶港塔</div>
+                    <div class="cost-row-label">景點門票<span class="cost-summary-chevron" aria-hidden="true"></span></div>
+                    <div class="cost-row-note">各日加總</div>
                   </div>
-                  <span class="cost-row-amt">NT$1,350</span>
+                  <span class="cost-row-amt" id="ovr-attractions">NT$675</span>
                 </summary>
                 <div class="cost-row cost-row-sub">
                   <span class="cost-row-icon">🌃</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">梅田藍天大廈（D5，2人）</div>
-                    <div class="cost-row-note">✅ Klook 已購・2人 NT$870</div>
+                    <div class="cost-row-label">D5 梅田藍天大廈</div>
+                    <div class="cost-row-note">✅ Klook 已購</div>
                   </div>
-                  <span class="cost-row-amt">NT$870</span>
+                  <span class="cost-row-amt">NT$435</span>
                 </div>
                 <div class="cost-row cost-row-sub">
                   <span class="cost-row-icon">🗼</span>
                   <div class="cost-row-body">
-                    <div class="cost-row-label">D2 神戶港塔（2人）</div>
-                    <div class="cost-row-note">含上露天・¥1,200/人</div>
+                    <div class="cost-row-label">D2 神戶港塔</div>
+                    <div class="cost-row-note">含上露天・¥1,200</div>
                   </div>
-                  <span class="cost-row-amt">NT$480</span>
+                  <span class="cost-row-amt">NT$240</span>
                 </div>
               </details>
             </div>
@@ -317,7 +332,7 @@
           <div class="day-chips-row">
             <span class="day-chip">🧥 薄外套＋長褲</span>
             <span class="day-chip">✈ CX564 14:50</span>
-            <span class="day-chip day-chip-cost">NT$8,605</span>
+            <span class="day-chip day-chip-cost" data-day="1">NT$2,281</span>
           </div>
         </div>
         <div class="day-body">
@@ -331,7 +346,6 @@
                     <div class="meta-row">✈️ <b>CX564</b>　TPE 11:05 → KIX 14:50</div>
                     <div class="meta-row">🛄 手提 7 kg ／ 託運 23 kg</div>
                     <div class="meta-row">起飛前 48hr App 選位</div>
-                    <div class="meta-row">💰 NT$467/人（2人共 NT$934）</div>
                     <div class="shop-chips">
                       <span class="spot-feature">限手提：行動電源・備用電池・筆電・護照</span>
                       <span class="spot-feature">限託運：液體 &gt;100ml・刀剪・噴霧罐</span>
@@ -456,7 +470,7 @@
                       <span class="spot-feature">A5 霜降和牛</span>
                       <span class="spot-feature">現桌炭烤</span>
                     </div>
-                    <div class="meta-row">💰 主廚推薦套餐 ¥5,500/人・2人共 NT$2,200</div>
+                    <div class="meta-row">💰 主廚推薦套餐 ¥5,500/人（NT$1,100）</div>
                     <div class="meta-row note">📌 需提前預約，建議選套餐</div>
                     <div class="meta-row">⏱ 停留 1.5–2 小時</div>
                   </div>
@@ -489,6 +503,14 @@
               </div>
             </div>
           </div>
+          <div class="day-costs" aria-hidden="true">
+            <span class="c" data-ntd="257" data-cat="haruka"></span>
+            <span class="c" data-jpy="240" data-cat="transit"></span>
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+            <span class="c" data-jpy="1500" data-cat="meal"></span>
+            <span class="c" data-jpy="5500" data-cat="meal"></span>
+          </div>
 
         </div>
       </div>
@@ -516,7 +538,7 @@
           <div class="day-chips-row">
             <span class="day-chip">🧥 薄外套＋👟 步行鞋</span>
             <span class="day-chip day-chip-buffer">🛡️ 餘裕 25 分</span>
-            <span class="day-chip day-chip-cost">NT$9,013</span>
+            <span class="day-chip day-chip-cost" data-day="2">NT$3,214</span>
           </div>
         </div>
         <div class="day-body">
@@ -624,7 +646,7 @@
                       <div class="shop-chips">
                         <span class="spot-feature">神戶和牛牛丼</span>
                       </div>
-                      <div class="meta-row">¥2,860/人・2人共 NT$1,144</div>
+                      <div class="meta-row">¥2,860/人（NT$572）</div>
                       <div class="meta-row">⏱ 停留 30 分</div>
                     </div>
                   </div>
@@ -661,7 +683,7 @@
                   <div class="tl-transit">
                     <button class="tl-transit-btn" aria-expanded="false" aria-label="展開交通資訊">
                       <span class="transit-mode-icon">🚶</span>
-                      <span class="transit-summary">步行 → The Bake</span>
+                      <span class="transit-summary">步行 → 三宮漫遊</span>
                       <span class="transit-badges">
                         <span class="transit-time">5分</span>
                       </span>
@@ -671,86 +693,22 @@
                       <div class="transit-route">
                         <div class="transit-node"><span class="transit-dot"></span><span>生田神社</span></div>
                         <div class="transit-leg transit-leg--walk"><span class="transit-line-badge transit-line-badge--walk">步行</span><span class="transit-leg-info">約 5 分</span></div>
-                        <div class="transit-node"><span class="transit-dot"></span><span>The Bake 神戶三宮</span></div>
-                      </div>
-                      <div class="transit-detail-meta"><span>⏱ 5 分</span></div>
-                    </div>
-                  </div>
-                  <div class="tl-item tl-meal">
-                    <div class="tl-item-name">
-                      <span class="meal-label">點心</span>
-                      <span class="tl-time">14:00</span>
-                      🥐 The Bake
-                      <a class="map-btn" href="https://maps.google.com/?q=The+Bake+神戸+三宮" target="_blank" rel="noopener noreferrer" aria-label="The Bake地圖">📍</a>
-                    </div>
-                    <div class="tl-item-meta">
-                      <div class="shop-chips">
-                        <span class="spot-feature">可麗露</span>
-                        <span class="spot-feature">北海道奶油麵包</span>
-                      </div>
-                      <div class="meta-row">⏱ 停留 15 分</div>
-                    </div>
-                  </div>
-                  <div class="tl-transit">
-                    <button class="tl-transit-btn" aria-expanded="false" aria-label="展開交通資訊">
-                      <span class="transit-mode-icon">🚶</span>
-                      <span class="transit-summary">步行 → 南京町</span>
-                      <span class="transit-badges">
-                        <span class="transit-time">5分</span>
-                      </span>
-                      <span class="transit-chevron" aria-hidden="true"></span>
-                    </button>
-                    <div class="tl-transit-detail">
-                      <div class="transit-route">
-                        <div class="transit-node"><span class="transit-dot"></span><span>The Bake 神戶三宮</span></div>
-                        <div class="transit-leg transit-leg--walk"><span class="transit-line-badge transit-line-badge--walk">步行</span><span class="transit-leg-info">約 5 分</span></div>
-                        <div class="transit-node"><span class="transit-dot"></span><span>南京町（神戶中華街）</span></div>
+                        <div class="transit-node"><span class="transit-dot"></span><span>三宮・南京町一帶</span></div>
                       </div>
                       <div class="transit-detail-meta"><span>⏱ 5 分</span></div>
                     </div>
                   </div>
                   <div class="tl-item">
-                    <div class="tl-item-name"><span class="tl-time">14:30</span>🥟 南京町 × 元町商店街 <a class="map-btn" href="https://maps.google.com/?q=南京町+元町+神戸市" target="_blank" rel="noopener noreferrer" aria-label="南京町地圖">📍</a></div>
+                    <div class="tl-item-name"><span class="tl-time">14:00</span>🎯 神戶下午漫遊（視情況挑幾個去）</div>
                     <div class="tl-item-meta">
                       <div class="shop-chips">
-                        <span class="spot-feature">豚まん（中式肉包）</span>
-                        <span class="spot-feature">廣東料理・中式甜點</span>
-                        <span class="spot-feature">神戶老街商圈</span>
-                        <span class="spot-feature">伴手禮・雜貨</span>
+                        <a class="shop-chip" href="https://maps.google.com/?q=The+Bake+神戸+三宮" target="_blank" rel="noopener noreferrer" aria-label="The Bake地圖"><span class="chip-icon">🥐</span><span>The Bake・可麗露 ¥350</span></a>
+                        <a class="shop-chip" href="https://maps.google.com/?q=南京町+元町+神戸市" target="_blank" rel="noopener noreferrer" aria-label="南京町地圖"><span class="chip-icon">🥟</span><span>南京町×元町・邊走邊吃 NT$300</span></a>
+                        <a class="shop-chip" href="https://maps.google.com/?q=EST+Royal+神戸+三宮" target="_blank" rel="noopener noreferrer" aria-label="EST Royal地圖"><span class="chip-icon">🍮</span><span>EST Royal・泡芙 ¥500</span></a>
+                        <a class="shop-chip" href="https://maps.google.com/?q=一嗹+ラーメン+神戸三宮" target="_blank" rel="noopener noreferrer" aria-label="拉麵一嗹地圖"><span class="chip-icon">🍜</span><span>拉麵一嗹・拉麵+炒飯/2 ¥1,950</span></a>
                       </div>
-                      <div class="meta-row"><span class="meal-chip">🥟 邊走邊吃・¥500–800/人</span></div>
-                      <div class="meta-row">⏱ 停留 1 小時</div>
-                    </div>
-                  </div>
-                  <div class="tl-item tl-meal">
-                    <div class="tl-item-name">
-                      <span class="meal-label">點心</span>
-                      <span class="tl-time">15:30</span>
-                      🍮 EST Royal
-                      <a class="map-btn" href="https://maps.google.com/?q=EST+Royal+神戸+三宮" target="_blank" rel="noopener noreferrer" aria-label="EST Royal地圖">📍</a>
-                    </div>
-                    <div class="tl-item-meta">
-                      <div class="shop-chips">
-                        <span class="spot-feature">濃厚卡士達泡芙</span>
-                        <span class="spot-feature">神戶名物甜點</span>
-                      </div>
-                      <div class="meta-row">⏱ 停留 15 分</div>
-                    </div>
-                  </div>
-                  <div class="tl-item tl-meal">
-                    <div class="tl-item-name">
-                      <span class="meal-label">輕食</span>
-                      <span class="tl-time">16:00</span>
-                      🍜 拉麵一嗹
-                      <a class="map-btn" href="https://maps.google.com/?q=一嗹+ラーメン+神戸三宮" target="_blank" rel="noopener noreferrer" aria-label="拉麵一嗹地圖">📍</a>
-                    </div>
-                    <div class="tl-item-meta">
-                      <div class="shop-chips">
-                        <span class="spot-feature">雞白湯拉麵</span>
-                        <span class="spot-feature">炒飯必點</span>
-                      </div>
-                      <div class="meta-row">¥1,500–2,000/人</div>
-                      <div class="meta-row">⏱ 停留 45 分</div>
+                      <div class="meta-row">💰 估算（50% 機率）¥1,400 + NT$150 ≈ NT$430/人</div>
+                      <div class="meta-row">⏱ 自由安排，1–2.5 小時</div>
                     </div>
                   </div>
                   <div class="tl-transit">
@@ -900,6 +858,20 @@
               </div>
             </div>
           </div>
+          <div class="day-costs" aria-hidden="true">
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+            <span class="c" data-jpy="860" data-cat="transit"></span>
+            <span class="c" data-jpy="2100" data-cat="attraction"></span>
+            <span class="c" data-jpy="360" data-cat="transit"></span>
+            <span class="c" data-jpy="2860" data-cat="meal"></span>
+            <span class="c" data-jpy="1400" data-cat="meal"></span>
+            <span class="c" data-ntd="150" data-cat="meal"></span>
+            <span class="c" data-jpy="800" data-cat="attraction"></span>
+            <span class="c" data-jpy="1200" data-cat="attraction"></span>
+            <span class="c" data-jpy="5200" data-cat="meal"></span>
+            <span class="c" data-jpy="420" data-cat="transit"></span>
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -926,7 +898,7 @@
           <div class="day-chips-row">
             <span class="day-chip">👕 短袖＋🌂 帶傘</span>
             <span class="day-chip day-chip-buffer">🛡️ 餘裕 60 分</span>
-            <span class="day-chip day-chip-cost">NT$7,473</span>
+            <span class="day-chip day-chip-cost" data-day="3">NT$2,502</span>
           </div>
         </div>
         <div class="day-body">
@@ -1155,6 +1127,15 @@
               </div>
             </div>
           </div>
+          <div class="day-costs" aria-hidden="true">
+            <span class="c" data-jpy="560" data-cat="transit"></span>
+            <span class="c" data-jpy="420" data-cat="transit"></span>
+            <span class="c" data-jpy="430" data-cat="transit"></span>
+            <span class="c" data-jpy="2150" data-cat="meal"></span>
+            <span class="c" data-jpy="1000" data-cat="meal"></span>
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+            <span class="c" data-jpy="2500" data-cat="meal"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -1182,7 +1163,7 @@
             <span class="day-chip">👟 運動鞋＋🧴 防曬乳</span>
             <span class="day-chip">USJ 全日</span>
             <span class="day-chip day-chip-buffer">🛡️ 餘裕 25 分</span>
-            <span class="day-chip day-chip-cost">NT$17,545</span>
+            <span class="day-chip day-chip-cost" data-day="4">NT$7,488</span>
           </div>
         </div>
         <div class="day-body">
@@ -1289,6 +1270,15 @@
               </div>
             </div>
           </div>
+          <div class="day-costs" aria-hidden="true">
+            <span class="c" data-jpy="400" data-cat="transit"></span>
+            <span class="c" data-jpy="500" data-cat="meal"></span>
+            <span class="c" data-ntd="5420" data-cat="usj"></span>
+            <span class="c" data-jpy="2250" data-cat="meal"></span>
+            <span class="c" data-jpy="1500" data-cat="meal"></span>
+            <span class="c" data-jpy="2000" data-cat="meal"></span>
+            <span class="c" data-jpy="400" data-cat="transit"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -1316,7 +1306,7 @@
             <span class="day-chip">👗 輕薄穿搭</span>
             <span class="day-chip">🌹 玫瑰盛開期</span>
             <span class="day-chip day-chip-buffer">🛡️ 餘裕 30 分</span>
-            <span class="day-chip day-chip-cost">NT$12,449</span>
+            <span class="day-chip day-chip-cost" data-day="5">NT$4,198</span>
           </div>
         </div>
         <div class="day-body">
@@ -1469,7 +1459,7 @@
                       <span class="spot-feature">夜景全景 360°</span>
                       <span class="spot-feature">開放天台</span>
                     </div>
-                    <div class="meta-row note">📌 Klook 已購（2人 NT$870）；入夜後夜景最值</div>
+                    <div class="meta-row note">📌 Klook 已購（NT$435/人）；入夜後夜景最值</div>
                     <div class="meta-row">⏱ 停留 1 小時</div>
                   </div>
                 </div>
@@ -1502,6 +1492,14 @@
               </div>
             </div>
           </div>
+          <div class="day-costs" aria-hidden="true">
+            <span class="c" data-jpy="370" data-cat="transit"></span>
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+            <span class="c" data-jpy="1650" data-cat="meal"></span>
+            <span class="c" data-jpy="7800" data-cat="meal"></span>
+            <span class="c" data-ntd="435" data-cat="attraction"></span>
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -1528,7 +1526,7 @@
           <div class="day-chips-row">
             <span class="day-chip">🎒 輕便整理行李</span>
             <span class="day-chip">✈ CX565 16:15</span>
-            <span class="day-chip day-chip-cost">NT$4,870</span>
+            <span class="day-chip day-chip-cost" data-day="6">NT$2,005</span>
           </div>
         </div>
         <div class="day-body">
@@ -1660,11 +1658,18 @@
                 <div class="tl-item">
                   <div class="tl-item-name"><span class="tl-time">16:15</span>🇹🇼 CX565 起飛返台</div>
                   <div class="tl-item-meta">
-                    <div class="meta-row">🚅 抵台後高鐵返家，NT$430/人（2人共 NT$860，實際）</div>
+                    <div class="meta-row">🚅 抵台後高鐵返家</div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="day-costs" aria-hidden="true">
+            <span class="c" data-jpy="240" data-cat="transit"></span>
+            <span class="c" data-jpy="1100" data-cat="meal"></span>
+            <span class="c" data-jpy="240" data-cat="transit"></span>
+            <span class="c" data-jpy="190" data-cat="transit"></span>
+            <span class="c" data-ntd="257" data-cat="haruka"></span>
           </div>
         </div>
       </div>

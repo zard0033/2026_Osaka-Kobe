@@ -110,6 +110,13 @@ mqMobile.addEventListener('change', () => {
 });
 window.addEventListener('resize', syncMobileHeight, { passive: true });
 
+// 監聽 panel 高度變化（details 展開、transit-detail 展開等）→ 重新同步容器高度，
+// 否則容器高度凍結，展開後的內容會被 footer 蓋住。
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(() => syncMobileHeight());
+  panels.forEach(p => ro.observe(p));
+}
+
 // ── Back to top ──
 const backToTop = document.getElementById('backToTop');
 window.addEventListener('scroll', () => {
@@ -201,13 +208,89 @@ const fetchJson = (url) =>
   fetchJson('https://api.exchangerate-api.com/v4/latest/JPY').then(data => {
     const twd = data?.rates?.TWD;
     if (!twd) return;
-    const rate = twd.toFixed(2);
+    const rate = Math.round(twd * 100) / 100;
     const display = document.getElementById('rate-display');
     const footer  = document.getElementById('rate-footer');
-    if (display) display.textContent = `¥1 ≈ NT$${rate}`;
-    if (footer)  footer.textContent  = rate;
+    if (display) display.textContent = `¥1 ≈ NT$${rate.toFixed(2)}`;
+    if (footer)  footer.textContent  = rate.toFixed(2);
+    updateAllCosts(rate);
   });
 }());
+
+function updateAllCosts(rate) {
+  const fmt = n => 'NT$' + Math.round(n).toLocaleString();
+  document.querySelectorAll('.jpy-amt[data-jpy]').forEach(el => {
+    el.textContent = fmt(+el.dataset.jpy * rate);
+  });
+  const cats = { meal: 0, transit: 0, attraction: 0, usj: 0, haruka: 0 };
+  let daySum = 0;
+  for (let d = 1; d <= 6; d++) {
+    const panel = document.getElementById(`tab-${d}`);
+    if (!panel) continue;
+    let dayJpy = 0, dayNtd = 0;
+    panel.querySelectorAll('[data-jpy]').forEach(el => {
+      const v = +el.dataset.jpy;
+      dayJpy += v;
+      const cat = el.dataset.cat;
+      if (cat in cats) cats[cat] += Math.round(v * rate);
+    });
+    panel.querySelectorAll('[data-ntd]').forEach(el => {
+      const v = +el.dataset.ntd;
+      dayNtd += v;
+      const cat = el.dataset.cat;
+      if (cat in cats) cats[cat] += v;
+    });
+    const dayTotal = Math.round(dayJpy * rate) + dayNtd;
+    daySum += dayTotal;
+    const chip = document.querySelector(`.day-chip-cost[data-day="${d}"]`);
+    if (chip) chip.textContent = fmt(dayTotal);
+  }
+  const setEl = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = fmt(val); };
+  setEl('ovr-meals', cats.meal);
+  setEl('ovr-transit-metro', cats.transit);
+  setEl('ovr-transit-haruka', cats.haruka);
+  setEl('ovr-transit', cats.transit + cats.haruka);
+  setEl('ovr-attractions', cats.attraction);
+  setEl('ovr-usj', cats.usj);
+  const shopping  = Math.round(23000 * rate);
+  const miscTotal = 444 + Math.round(10000 * rate);
+  setEl('fixed-misc-total', miscTotal);
+  const fixedTotal = 12500 + 467 + 430 + 6463 + miscTotal;
+  setEl('fixed-total', fixedTotal);
+  const localTotal = daySum + shopping;
+  setEl('local-total', localTotal);
+  const tripTotal = fixedTotal + localTotal;
+  setEl('trip-total', tripTotal);
+  const budgetEl = document.querySelector('.ov-stat-hi .ov-val');
+  if (budgetEl) budgetEl.textContent = fmt(tripTotal);
+  const holeEl = document.getElementById('pie-hole-amt');
+  if (holeEl) holeEl.innerHTML = 'NT$<br>' + Math.round(tripTotal).toLocaleString();
+  updatePie(cats, shopping, miscTotal, tripTotal);
+}
+
+
+function updatePie(cats, shopping, misc, total) {
+  const flights = 12500, hotel = 6463;
+  const transit = 467 + 430 + cats.transit + cats.haruka;
+  const COLORS  = ['#99463A','#D4895F','#C4A882','#6E2B22','#D4B896','#A0785A','#8B6355','#CFBFB5'];
+  const LABELS  = ['機票','餐飲','住宿','USJ','購物','交通','雜費','景點'];
+  const IDS     = ['flights','meals','hotel','usj','shopping','transit','misc','attractions'];
+  const amts    = [flights, cats.meal, hotel, cats.usj, shopping, transit, misc, cats.attraction];
+  const pct     = amt => total > 0 ? (amt / total) * 100 : 0;
+  let cum = 0;
+  const stops = amts.map((amt, i) => {
+    const p = pct(amt);
+    const stop = `${COLORS[i]} ${cum.toFixed(1)}% ${(cum + p).toFixed(1)}%`;
+    cum += p;
+    return stop;
+  }).join(', ');
+  const pieEl = document.querySelector('.pie-chart');
+  if (pieEl) pieEl.style.background = `conic-gradient(${stops})`;
+  amts.forEach((amt, i) => {
+    const el = document.getElementById(`pie-${IDS[i]}`);
+    if (el) el.textContent = `${LABELS[i]} ${pct(amt).toFixed(1)}%`;
+  });
+}
 
 // ── Live weather (Open-Meteo) ──
 (function fetchWeather() {

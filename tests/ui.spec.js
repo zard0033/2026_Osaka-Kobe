@@ -100,6 +100,20 @@ test.describe('Mobile (390×844)', () => {
     }
   });
 
+  test('總覽展開 collapsible 後，容器高度同步增加（避免被 footer 蓋住）', async ({ page }) => {
+    const container = page.locator('.tabs-panels > .container');
+    const heightBefore = await container.evaluate(el => el.getBoundingClientRect().height);
+
+    await page.locator('#tab-0 details.cost-group-collapsible').first().evaluate(d => d.open = true);
+    await page.waitForTimeout(150);
+
+    const heightAfter = await container.evaluate(el => el.getBoundingClientRect().height);
+    const panelScrollHeight = await page.locator('#tab-0').evaluate(el => el.scrollHeight);
+
+    expect(heightAfter).toBeGreaterThan(heightBefore);
+    expect(heightAfter).toBeGreaterThanOrEqual(panelScrollHeight - 2);
+  });
+
   test('Back-to-top 按鈕：捲動後出現，點擊後回頂端', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, 800));
     const btn = page.locator('#backToTop');
@@ -142,6 +156,50 @@ test.describe('內容完整性', () => {
     await page.goto(PAGE_URL);
     await page.waitForLoadState('load');
     expect(errors).toHaveLength(0);
+  });
+
+  test('Hero：4 張漫畫 polaroid 全部載入', async ({ page }) => {
+    const pics = page.locator('.hero .hero-pic img');
+    await expect(pics).toHaveCount(4);
+    for (let i = 0; i < 4; i++) {
+      const img = pics.nth(i);
+      await expect(img).toHaveJSProperty('complete', true);
+      const w = await img.evaluate(el => el.naturalWidth);
+      expect(w, `hero-pic ${i} naturalWidth`).toBeGreaterThan(0);
+    }
+  });
+
+  test('Hero pass：journal heading 結構與內容齊全', async ({ page }) => {
+    const pass = page.locator('.hero-pass');
+    await expect(pass).toBeVisible();
+    await expect(pass.locator('.pass-eyebrow')).toContainText('2026 spring');
+    await expect(pass.locator('.pass-title-en')).toContainText('OSAKA');
+    await expect(pass.locator('.pass-title-zh')).toContainText('大阪');
+    const dates = pass.locator('.pass-date');
+    await expect(dates).toHaveCount(2);
+    await expect(dates.nth(0)).toHaveAttribute('datetime', '2026-05-16');
+    await expect(dates.nth(1)).toHaveAttribute('datetime', '2026-05-21');
+    await expect(pass.locator('.pass-meta')).toContainText('六');
+  });
+
+  test('Hero 4 張漫畫不重疊（DOMRect 互不相交）', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.waitForTimeout(900); // wait for animation to settle
+    const rects = await page.locator('.hero-pic').evaluateAll(els =>
+      els.map(el => {
+        const r = el.getBoundingClientRect();
+        return { x: r.x, y: r.y, w: r.width, h: r.height };
+      })
+    );
+    expect(rects).toHaveLength(4);
+    for (let i = 0; i < rects.length; i++) {
+      for (let j = i + 1; j < rects.length; j++) {
+        const a = rects[i], b = rects[j];
+        const overlap = a.x < b.x + b.w && a.x + a.w > b.x &&
+                        a.y < b.y + b.h && a.y + a.h > b.y;
+        expect(overlap, `pic ${i} 與 pic ${j} 不應重疊`).toBe(false);
+      }
+    }
   });
 
   test('D2–D5 day-header 含 餘裕 chip', async ({ page }) => {
