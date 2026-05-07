@@ -23,6 +23,11 @@
   /* Rail line colors (used by inline style="--lc:..." on .transit-leg) */
   --lc-jr: #0068B7;
   --lc-tanimachi: #522886;
+  --lc-hankyu-sanyo: #00afff;
+  --lc-jr-hanwa: #F68B1F;
+  --lc-nankai: #006400;
+  --lc-midosuji: #E5171F;
+  --lc-jr-yumesaki: #2B4D9C;
   --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-xl: 32px; --r-pill: 999px;
   --space-xs: 4px; --space-sm: 8px; --space-md: 16px;
   --space-lg: 24px; --space-xl: 32px; --space-2xl: 48px; --space-3xl: 64px;
@@ -348,7 +353,7 @@ section { padding: 64px 0; }
   transition: opacity 200ms ease;
 }
 .tabs-nav-wrapper .container.scrolled-end::after { opacity: 0; }
-.tabs-panels { padding-top: 32px; padding-bottom: 0px; overflow: hidden; position: relative; }
+.tabs-panels { padding-top: 32px; padding-bottom: 12px; overflow: hidden; position: relative; }
 .tabs-nav {
   display: flex; gap: 6px; overflow-x: auto;
   padding-bottom: 2px;
@@ -815,6 +820,7 @@ footer .heart { color: var(--coral); }
   font-size: 1.05rem; font-weight: 700;
   color: var(--brown); line-height: 1.2;
 }
+#rate-display { white-space: nowrap; }
 .ov-stat-hi .ov-val { font-size: 1rem; }
 .ov-key { font-size: .68rem; color: var(--text-muted); margin-top: 3px; }
 

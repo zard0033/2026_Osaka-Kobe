@@ -80,15 +80,6 @@ function onAnimEnd(el, fn) {
   setTimeout(run, 400);
 }
 
-function onScrollSettled(el, fn, delay = 50) {
-  el.addEventListener('scrollend', fn, { passive: true });
-  let timer;
-  el.addEventListener('scroll', () => {
-    clearTimeout(timer);
-    timer = setTimeout(fn, delay);
-  }, { passive: true });
-}
-
 // ── Mobile: sync tab buttons after native swipe ──
 if (tabsContainer) {
   function syncTabFromScroll() {
@@ -98,7 +89,17 @@ if (tabsContainer) {
       switchTab(nearest);
     }
   }
-  onScrollSettled(tabsContainer, syncTabFromScroll);
+  // scrollend fires after snap animation completes — no mid-animation false positives.
+  // Fallback for older browsers uses a 300ms delay so snap has time to settle.
+  if ('onscrollend' in window) {
+    tabsContainer.addEventListener('scrollend', syncTabFromScroll, { passive: true });
+  } else {
+    let swipeTimer;
+    tabsContainer.addEventListener('scroll', () => {
+      clearTimeout(swipeTimer);
+      swipeTimer = setTimeout(syncTabFromScroll, 300);
+    }, { passive: true });
+  }
   tabsContainer.addEventListener('scroll', syncMobileHeight, { passive: true });
 }
 
@@ -108,7 +109,11 @@ mqMobile.addEventListener('change', () => {
   if (mqMobile.matches) syncMobileHeight();
   else tabsContainer.style.height = '';
 });
-window.addEventListener('resize', syncMobileHeight, { passive: true });
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(syncMobileHeight, 16);
+}, { passive: true });
 
 // 監聽 panel 高度變化（details 展開、transit-detail 展開等）→ 重新同步容器高度，
 // 否則容器高度凍結，展開後的內容會被 footer 蓋住。
@@ -205,12 +210,15 @@ const fetchJson = (url) =>
 
 // ── Live exchange rate (exchangerate-api.com) ──
 (function fetchRate() {
+  const display = document.getElementById('rate-display');
+  const footer  = document.getElementById('rate-footer');
   fetchJson('https://api.exchangerate-api.com/v4/latest/JPY').then(data => {
     const twd = data?.rates?.TWD;
-    if (!twd) return;
+    if (!twd) {
+      if (display) display.textContent = '匯率取得失敗';
+      return;
+    }
     const rate = Math.round(twd * 100) / 100;
-    const display = document.getElementById('rate-display');
-    const footer  = document.getElementById('rate-footer');
     if (display) display.textContent = `¥1 ≈ NT$${rate.toFixed(2)}`;
     if (footer)  footer.textContent  = rate.toFixed(2);
     updateAllCosts(rate);
@@ -252,11 +260,26 @@ function updateAllCosts(rate) {
   setEl('ovr-transit', cats.transit + cats.haruka);
   setEl('ovr-attractions', cats.attraction);
   setEl('ovr-usj', cats.usj);
-  const shopping  = Math.round(23000 * rate);
-  const miscTotal = 444 + Math.round(10000 * rate);
+  // Read fixed costs from tab-0 DOM to avoid hardcoded duplication
+  const tab0 = document.getElementById('tab-0');
+  let fixedTotal = 0, miscTotal = 0, fixedTransit = 0;
+  if (tab0) {
+    tab0.querySelectorAll('.fixed-cost[data-ntd]').forEach(el => {
+      const v = +el.dataset.ntd;
+      fixedTotal += v;
+      if (el.dataset.cat === 'misc')    miscTotal    += v;
+      if (el.dataset.cat === 'transit') fixedTransit += v;
+    });
+    tab0.querySelectorAll('.fixed-cost[data-jpy]').forEach(el => {
+      const v = Math.round(+el.dataset.jpy * rate);
+      fixedTotal += v;
+      if (el.dataset.cat === 'misc')    miscTotal    += v;
+      if (el.dataset.cat === 'transit') fixedTransit += v;
+    });
+  }
   setEl('fixed-misc-total', miscTotal);
-  const fixedTotal = 12500 + 467 + 430 + 6463 + miscTotal;
   setEl('fixed-total', fixedTotal);
+  const shopping  = Math.round(23000 * rate);
   const localTotal = daySum + shopping;
   setEl('local-total', localTotal);
   const tripTotal = fixedTotal + localTotal;
@@ -265,13 +288,13 @@ function updateAllCosts(rate) {
   if (budgetEl) budgetEl.textContent = fmt(tripTotal);
   const holeEl = document.getElementById('pie-hole-amt');
   if (holeEl) holeEl.innerHTML = 'NT$<br>' + Math.round(tripTotal).toLocaleString();
-  updatePie(cats, shopping, miscTotal, tripTotal);
+  updatePie(cats, shopping, miscTotal, fixedTransit, tripTotal);
 }
 
 
-function updatePie(cats, shopping, misc, total) {
+function updatePie(cats, shopping, misc, fixedTransit, total) {
   const flights = 12500, hotel = 6463;
-  const transit = 467 + 430 + cats.transit + cats.haruka;
+  const transit = fixedTransit + cats.transit + cats.haruka;
   const COLORS  = ['#99463A','#D4895F','#C4A882','#6E2B22','#D4B896','#A0785A','#8B6355','#CFBFB5'];
   const LABELS  = ['機票','餐飲','住宿','USJ','購物','交通','雜費','景點'];
   const IDS     = ['flights','meals','hotel','usj','shopping','transit','misc','attractions'];
@@ -319,6 +342,7 @@ function updatePie(cats, shopping, misc, total) {
       if (!data?.daily) return;
       const { weather_code, temperature_2m_max, temperature_2m_min, precipitation_probability_max } = data.daily;
       for (let i = 0; i < 6; i++) {
+        if (weather_code[i] == null || temperature_2m_max[i] == null) continue;
         const panel = document.getElementById(`tab-${i + 1}`);
         if (!panel) continue;
         const weatherEl = panel.querySelector('.day-weather-main');
@@ -326,10 +350,14 @@ function updatePie(cats, shopping, misc, total) {
         if (!weatherEl || !rainEl) continue;
         const emoji = WMO_EMOJI[weather_code[i]] ?? '🌤️';
         const hi    = Math.round(temperature_2m_max[i]);
-        const lo    = Math.round(temperature_2m_min[i]);
+        const lo    = Math.round(temperature_2m_min[i] ?? temperature_2m_max[i]);
         const rain  = precipitation_probability_max[i] ?? 0;
-        weatherEl.innerHTML = `${emoji} ${hi}°C <span class="day-weather-lo">/ ${lo}°C</span>`;
-        rainEl.textContent  = `💧 ${rain}%`;
+        weatherEl.textContent = `${emoji} ${hi}°C `;
+        const loSpan = document.createElement('span');
+        loSpan.className = 'day-weather-lo';
+        loSpan.textContent = `/ ${lo}°C`;
+        weatherEl.appendChild(loSpan);
+        rainEl.textContent = `💧 ${rain}%`;
       }
     });
 }());

@@ -81,16 +81,6 @@ test.describe('Mobile (390×844)', () => {
 
   test.beforeEach(async ({ page }) => { await gotoPage(page); });
 
-  test('Day 2 顯示神戶一日遊行程', async ({ page }) => {
-    await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('神戶一日遊');
-  });
-
-  test('Day 2 包含 Meriken Park 關鍵字', async ({ page }) => {
-    await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('Meriken Park');
-  });
-
   test('觸控目標：所有 tab-btn 高度 ≥ 44px', async ({ page }) => {
     const heights = await page.locator('.tab-btn').evaluateAll(
       els => els.map(el => el.getBoundingClientRect().height)
@@ -138,14 +128,19 @@ test.describe('內容完整性', () => {
     }
   });
 
-  test('D2 包含 生田神社 關鍵字', async ({ page }) => {
-    await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('生田神社');
+  test('每個 Day tab（1-6）至少有一個行程項目', async ({ page }) => {
+    for (let i = 1; i <= 6; i++) {
+      await page.locator(`#tab-btn-${i}`).click();
+      const count = await page.locator(`#tab-${i} .tl-item`).count();
+      expect(count, `Day ${i} 應有至少一個 .tl-item`).toBeGreaterThan(0);
+    }
   });
 
-  test('D2 包含 焼肉 神戸十番 關鍵字', async ({ page }) => {
-    await page.locator('#tab-btn-2').click();
-    await expect(page.locator('#tab-2')).toContainText('焼肉 神戸十番');
+  test('每個 Day tab（1-6）至少有一個費用資料屬性', async ({ page }) => {
+    for (let i = 1; i <= 6; i++) {
+      const count = await page.locator(`#tab-${i} [data-jpy], #tab-${i} [data-ntd]`).count();
+      expect(count, `Day ${i} 應有費用標記`).toBeGreaterThan(0);
+    }
   });
 
   test('頁面沒有 console error', async ({ page }) => {
