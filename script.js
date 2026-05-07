@@ -265,7 +265,7 @@ function updateAllCosts(rate) {
   setEl('ovr-transit-metro', cats.transit);
   setEl('ovr-transit-haruka', cats.haruka);
   setEl('ovr-transit', cats.transit + cats.haruka);
-  setEl('ovr-attractions', cats.attraction);
+  setEl('ovr-attractions', cats.attraction + cats.usj);
   setEl('ovr-usj', cats.usj);
   // Read fixed costs from tab-0 DOM to avoid hardcoded duplication
   const tab0 = document.getElementById('tab-0');

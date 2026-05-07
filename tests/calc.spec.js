@@ -19,7 +19,7 @@ function mockRate(page, twd) {
 test.describe('匯率顯示', () => {
   test('正確格式：¥1 ≈ NT$X.XX', async ({ page }) => {
     await mockRate(page, 0.22);
-    await page.goto(PAGE_URL);
+    await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => {
       const el = document.getElementById('rate-display');
       return el && el.textContent.includes('NT$');
@@ -29,7 +29,7 @@ test.describe('匯率顯示', () => {
 
   test('API 失敗時顯示「匯率取得失敗」', async ({ page }) => {
     await page.route(RATE_API, route => route.abort());
-    await page.goto(PAGE_URL);
+    await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(
       () => document.getElementById('rate-display')?.textContent === '匯率取得失敗',
       { timeout: 5000 }
@@ -41,7 +41,7 @@ test.describe('匯率顯示', () => {
 test.describe('費用計算', () => {
   test('每個 Day 的費用 chip 套用匯率後為正整數', async ({ page }) => {
     await mockRate(page, 0.22);
-    await page.goto(PAGE_URL);
+    await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => {
       const el = document.getElementById('rate-display');
       return el && el.textContent.includes('NT$');
@@ -56,7 +56,7 @@ test.describe('費用計算', () => {
 
   test('trip-total 等於 fixed-total + local-total', async ({ page }) => {
     await mockRate(page, 0.22);
-    await page.goto(PAGE_URL);
+    await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => {
       const el = document.getElementById('rate-display');
       return el && el.textContent.includes('NT$');
@@ -78,7 +78,7 @@ test.describe('費用計算', () => {
   test('匯率為 0 時不顯示費用（fallback 顯示失敗訊息）', async ({ page }) => {
     // rate=0 → !twd → failure path
     await mockRate(page, 0);
-    await page.goto(PAGE_URL);
+    await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(
       () => document.getElementById('rate-display')?.textContent === '匯率取得失敗',
       { timeout: 5000 }

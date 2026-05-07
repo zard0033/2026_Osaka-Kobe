@@ -541,7 +541,7 @@ section { padding: 64px 0; }
   display: flex; flex-direction: column; gap: 4px;
 }
 .tl-item-meta .meta-row {
-  display: flex; align-items: flex-start; gap: 6px;
+  display: block;
   font-size: .75rem; color: var(--text-sub);
   line-height: 1.5;
   order: 1;
@@ -564,9 +564,7 @@ section { padding: 64px 0; }
 .meta-row.note { color: var(--text-muted); }
 /* bullet indicator for plain-text meta-rows (not notes, not chip rows) */
 .tl-item-meta > .meta-row:not(.note):not(:has(> a.meal-chip, > span.meal-chip, > span.spot-feature, > a.shop-chip, > a.map-btn, > a.yt-btn))::before {
-  content: '📌';
-  flex-shrink: 0;
-  margin-right: 3px;
+  content: '📌\00a0';
 }
 .meta-row.time { color: var(--coral-dark); font-weight: 500; }
 .meta-row a {
