@@ -85,9 +85,16 @@ if (tabsContainer) {
   function syncTabFromScroll() {
     if (!mqMobile.matches) return;
     const nearest = Math.round(tabsContainer.scrollLeft / tabsContainer.clientWidth);
-    if (nearest !== currentTab && nearest >= 0 && nearest < panels.length) {
-      switchTab(nearest);
-    }
+    if (nearest === currentTab || nearest < 0 || nearest >= panels.length) return;
+    // Update UI state only — don't call switchTab() to avoid re-triggering scrollTo
+    currentTab = nearest;
+    tabBtns.forEach((b, i) => {
+      b.classList.toggle('active', i === nearest);
+      b.setAttribute('aria-selected', i === nearest ? 'true' : 'false');
+      b.setAttribute('tabindex', i === nearest ? '0' : '-1');
+    });
+    tabBtns[nearest].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    syncMobileHeight();
   }
   // scrollend fires after snap animation completes — no mid-animation false positives.
   // Fallback for older browsers uses a 300ms delay so snap has time to settle.
