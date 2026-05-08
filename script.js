@@ -248,12 +248,21 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
   }, { passive: false });
 
   tabsContainer.addEventListener('touchend', e => {
-    if (!mqMobile.matches || dirLock !== 'x') return;
-    const dx = e.changedTouches[0].clientX - startX;
+    if (!mqMobile.matches) return;
     const w = tabsContainer.clientWidth;
-    let target = swipeStartTab;
-    if (dx < -40) target = Math.min(panels.length - 1, swipeStartTab + 1);
-    else if (dx > 40) target = Math.max(0, swipeStartTab - 1);
+    let target;
+    if (dirLock === 'x') {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (dx < -40) target = Math.min(panels.length - 1, swipeStartTab + 1);
+      else if (dx > 40) target = Math.max(0, swipeStartTab - 1);
+      else target = swipeStartTab;
+    } else {
+      // 非橫向滑動（斜滑、輕點、垂直捲動）：snap 回最近的 panel，限制在 ±1
+      const nearest = Math.round(tabsContainer.scrollLeft / w);
+      const lo = Math.max(0, swipeStartTab - 1);
+      const hi = Math.min(panels.length - 1, swipeStartTab + 1);
+      target = Math.max(lo, Math.min(hi, nearest));
+    }
     tabsContainer.scrollTo({ left: target * w, behavior: 'smooth' });
   }, { passive: true });
 })();
