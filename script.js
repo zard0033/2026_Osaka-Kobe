@@ -188,7 +188,7 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
 });
 
 
-// ── Mobile swipe to switch tabs ──
+// ── Desktop swipe to switch tabs ──
 (function () {
   const panelsEl = document.querySelector('.tabs-panels');
   let startX = 0, startY = 0;
@@ -208,6 +208,53 @@ document.querySelectorAll('.tl-transit-btn').forEach(btn => {
     if (next < 0 || next >= tabBtns.length) return;
     switchTab(next);
     tabBtns[next].focus();
+  }, { passive: true });
+})();
+
+// ── Mobile swipe: one-panel-at-a-time (iOS scroll-snap-stop workaround) ──
+// iOS WebKit ignores scroll-snap-stop:always, so momentum can skip panels.
+// We take over horizontal touch control to enforce ±1 constraint.
+(function () {
+  if (!tabsContainer) return;
+  let startX = 0, startY = 0, startLeft = 0, swipeStartTab = 0;
+  let dirLock = null;
+
+  tabsContainer.addEventListener('touchstart', e => {
+    if (!mqMobile.matches) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    // Snap to nearest panel to cancel any in-progress smooth scroll
+    swipeStartTab = Math.round(tabsContainer.scrollLeft / tabsContainer.clientWidth);
+    currentTab = swipeStartTab;
+    tabsContainer.scrollLeft = swipeStartTab * tabsContainer.clientWidth;
+    startLeft = tabsContainer.scrollLeft;
+    dirLock = null;
+  }, { passive: true });
+
+  tabsContainer.addEventListener('touchmove', e => {
+    if (!mqMobile.matches) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    if (!dirLock) {
+      if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+      dirLock = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y';
+    }
+    if (dirLock !== 'x') return;
+    e.preventDefault();
+    const w = tabsContainer.clientWidth;
+    const min = Math.max(0, (swipeStartTab - 1) * w);
+    const max = Math.min((panels.length - 1) * w, (swipeStartTab + 1) * w);
+    tabsContainer.scrollLeft = Math.max(min, Math.min(max, startLeft - dx));
+  }, { passive: false });
+
+  tabsContainer.addEventListener('touchend', e => {
+    if (!mqMobile.matches || dirLock !== 'x') return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const w = tabsContainer.clientWidth;
+    let target = swipeStartTab;
+    if (dx < -40) target = Math.min(panels.length - 1, swipeStartTab + 1);
+    else if (dx > 40) target = Math.max(0, swipeStartTab - 1);
+    tabsContainer.scrollTo({ left: target * w, behavior: 'smooth' });
   }, { passive: true });
 })();
 
