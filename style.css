@@ -421,7 +421,7 @@ section { padding: 64px 0; }
   color: var(--white);
   display: flex; flex-direction: column; gap: 0;
 }
-/* Row 1: date left, temperature right — vertically centered */
+/* Row 1: date left, temperature+rain right — vertically centered */
 .day-hd-top {
   display: flex; align-items: center; gap: 14px;
 }
@@ -430,6 +430,7 @@ section { padding: 64px 0; }
 }
 .day-hd-right {
   flex-shrink: 0; text-align: right;
+  display: flex; flex-direction: row; align-items: center; gap: 8px;
 }
 .day-header .day-num {
   font-size: .68rem; font-weight: 700;
@@ -437,9 +438,9 @@ section { padding: 64px 0; }
   color: rgba(255,255,255,.82); line-height: 1;
   flex-shrink: 0;
 }
-/* Row 2: title left, rain right */
+/* Row 2: title left, clothing chip right */
 .day-hd-middle {
-  display: flex; align-items: baseline; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   gap: 12px; margin-top: 6px;
 }
 .day-header .day-title {
@@ -453,7 +454,7 @@ section { padding: 64px 0; }
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .day-weather-lo { font-size: .62em; opacity: .82; font-weight: 500; }
-.day-rain { font-size: .85rem; color: rgba(255,255,255,.85); white-space: nowrap; }
+.day-rain { font-size: .8rem; color: rgba(255,255,255,.8); white-space: nowrap; }
 /* Row 3: chips — full width, separated */
 .day-chips-row {
   display: flex; flex-wrap: wrap; gap: 5px;

@@ -5,6 +5,24 @@ const tabsContainer = document.querySelector('.tabs-panels .container');
 const mqMobile = window.matchMedia('(max-width: 600px)');
 let currentTab = 0;
 
+// Scroll the tab nav bar so that the active button is visible.
+// Uses direct scrollLeft assignment instead of scrollIntoView —
+// scrollIntoView on iOS can unexpectedly scroll the panels container,
+// triggering spurious scrollend events that cause "跳日" (wrong-day jumps).
+function scrollTabNavToBtn(idx) {
+  const btn = tabBtns[idx];
+  if (!btn || !tabsNav) return;
+  const btnLeft  = btn.offsetLeft;
+  const btnRight = btnLeft + btn.offsetWidth;
+  const navLeft  = tabsNav.scrollLeft;
+  const navRight = navLeft + tabsNav.clientWidth;
+  if (btnLeft < navLeft) {
+    tabsNav.scrollLeft = btnLeft - 8;
+  } else if (btnRight > navRight) {
+    tabsNav.scrollLeft = btnRight - tabsNav.clientWidth + 8;
+  }
+}
+
 function syncMobileHeight() {
   if (!mqMobile.matches) return;
   const pos = tabsContainer.scrollLeft / tabsContainer.clientWidth;
@@ -25,7 +43,7 @@ function switchTab(idx) {
     b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
     b.setAttribute('tabindex', i === idx ? '0' : '-1');
   });
-  tabBtns[idx].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  scrollTabNavToBtn(idx);
 
   if (mqMobile.matches) {
     // Mobile: native scroll-snap handles the visual transition
@@ -93,7 +111,7 @@ if (tabsContainer) {
       b.setAttribute('aria-selected', i === nearest ? 'true' : 'false');
       b.setAttribute('tabindex', i === nearest ? '0' : '-1');
     });
-    tabBtns[nearest].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    scrollTabNavToBtn(nearest);
     syncMobileHeight();
   }
   // scrollend fires after snap animation completes — no mid-animation false positives.
@@ -322,6 +340,22 @@ function updatePie(cats, shopping, misc, fixedTransit, total) {
   });
 }
 
+// ── Clothing advice (tenki.jp dress index logic) ──
+function getClothingAdvice(hi, lo, rain) {
+  let base;
+  if (hi >= 28)      base = '👕 短袖';
+  else if (hi >= 24) base = '👕 短袖＋薄外套';
+  else if (hi >= 20) base = '🧥 長袖＋薄外套';
+  else if (hi >= 16) base = '🧥 薄外套';
+  else               base = '🧥 厚外套・風衣';
+
+  if (lo <= 15 && hi >= 22) base += '（早晚加一件）';
+
+  if (rain >= 40) base += '＋☂️ 帶傘';
+
+  return base;
+}
+
 // ── Live weather (Open-Meteo) ──
 (function fetchWeather() {
   const WMO_EMOJI = {
@@ -365,6 +399,8 @@ function updatePie(cats, shopping, misc, fixedTransit, total) {
         loSpan.textContent = `/ ${lo}°C`;
         weatherEl.appendChild(loSpan);
         rainEl.textContent = `💧 ${rain}%`;
+        const clothingChip = panel.querySelector('.day-hd-middle .day-chip');
+        if (clothingChip) clothingChip.textContent = getClothingAdvice(hi, lo, rain);
       }
     });
 }());
