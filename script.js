@@ -98,6 +98,46 @@ function onAnimEnd(el, fn) {
   setTimeout(run, 400);
 }
 
+// ── Shop Sheet ──
+(function () {
+  const backdrop = document.getElementById('shop-sheet-backdrop');
+  let currentSheet = null;
+
+  function openSheet(id) {
+    const sheet = document.getElementById(id);
+    if (!sheet) return;
+    currentSheet = sheet;
+    backdrop.classList.add('open');
+    backdrop.setAttribute('aria-hidden', 'false');
+    sheet.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    sheet.querySelector('.shop-sheet-close')?.focus();
+  }
+
+  function closeSheet() {
+    if (!currentSheet) return;
+    currentSheet.classList.add('closing');
+    backdrop.classList.remove('open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    onAnimEnd(currentSheet, () => {
+      currentSheet.classList.remove('open', 'closing');
+      currentSheet = null;
+      document.body.style.overflow = '';
+    });
+  }
+
+  document.querySelectorAll('.day-chip-shop').forEach(btn => {
+    btn.addEventListener('click', () => openSheet(btn.dataset.sheet));
+  });
+  backdrop.addEventListener('click', closeSheet);
+  document.querySelectorAll('.shop-sheet-close').forEach(btn => {
+    btn.addEventListener('click', closeSheet);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && currentSheet) closeSheet();
+  });
+})();
+
 // ── Mobile: sync tab buttons after native swipe ──
 if (tabsContainer) {
   function syncTabFromScroll() {

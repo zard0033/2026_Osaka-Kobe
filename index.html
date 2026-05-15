@@ -349,6 +349,7 @@
           <div class="day-chips-row">
             <span class="day-chip">✈ CX564 14:50</span>
             <span class="day-chip day-chip-cost" data-day="1">NT$2,281</span>
+            <button class="day-chip day-chip-shop" data-sheet="shop-d1">🛍️ 採買清單</button>
           </div>
         </div>
         <div class="day-body">
@@ -1308,9 +1309,9 @@
             <span class="day-chip">👗 輕薄穿搭</span>
           </div>
           <div class="day-chips-row">
-            <span class="day-chip">🌹 玫瑰盛開期</span>
             <span class="day-chip day-chip-cost" data-day="5">NT$4,198</span>
             <span class="day-chip day-chip-buffer">🛡️ 餘裕 30 分</span>
+            <button class="day-chip day-chip-shop" data-sheet="shop-d5">🛍️ 採買清單</button>
           </div>
         </div>
         <div class="day-body">
@@ -1525,6 +1526,7 @@
           <div class="day-chips-row">
             <span class="day-chip">✈ CX565 16:15</span>
             <span class="day-chip day-chip-cost" data-day="6">NT$2,005</span>
+            <button class="day-chip day-chip-shop" data-sheet="shop-d6">📦 KIX 取貨</button>
           </div>
         </div>
         <div class="day-body">
@@ -1718,6 +1720,138 @@
   <a class="shop-chip" href="https://maps.google.com/?q=KOHYO+内本町+大阪市中央区" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🛒</span><span>KOHYO超市・∼23:00</span></a>
   <a class="shop-chip" href="https://maps.app.goo.gl/iivNzBHJMspLqsDu9" target="_blank" rel="noopener noreferrer"><span class="chip-icon">🛒</span><span>IZUMIYA超市・∼00:00</span></a>
 </template>
+<!-- Shop Sheet backdrop -->
+<div class="shop-sheet-backdrop" id="shop-sheet-backdrop" aria-hidden="true"></div>
+
+<!-- Day 1 採買清單 -->
+<div class="shop-sheet" id="shop-d1" role="dialog" aria-modal="true" aria-labelledby="sheet-title-d1">
+  <div class="shop-sheet-handle"></div>
+  <div class="shop-sheet-header">
+    <h2 class="shop-sheet-title" id="sheet-title-d1">Day 1｜心齋橋採買清單</h2>
+    <button class="shop-sheet-close" aria-label="關閉">✕</button>
+  </div>
+  <div class="shop-sheet-body">
+    <div class="sheet-time-badge">🕕 18:00–20:00 心齋橋逛街時順手</div>
+    <p class="sheet-section-title">🎁 伴手禮</p>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🍰</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">PABLO 半熟起司塔</div>
+        <div class="sheet-item-note">心齋橋本店 · <a href="https://maps.google.com/?q=PABLO+心斎橋" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;">地圖 ↗</a></div>
+      </div>
+    </div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🍮</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">食倒太郎布丁</div>
+        <div class="sheet-item-note">道頓堀限定，心齋橋步行 5 分 · <a href="https://maps.app.goo.gl/YSBUpyBonp3oxYpH7" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;">地圖 ↗</a></div>
+      </div>
+    </div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🥛</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">月化粧 牛奶饅頭</div>
+        <div class="sheet-item-note">難波，青木松風庵專櫃 · <a href="https://maps.app.goo.gl/dzHWcB8sZBoUpmyJ8" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;">地圖 ↗</a></div>
+      </div>
+    </div>
+    <div class="sheet-time-badge" style="margin-top:var(--space-sm)">🕘 21:00 晚餐後</div>
+    <p class="sheet-section-title">🧴 唐吉軻德（飯店附近分店）<a href="https://maps.app.goo.gl/jnDvp54ZG6hEzQ7J7" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;margin-left:6px;font-size:.68rem;">地圖 ↗</a></p>
+    <div class="sheet-note" style="margin-bottom:var(--space-sm)">💡 帶護照免稅 · LINE 好友折價券疊加 7%</div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">💊</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">藥品</div>
+        <div class="sheet-item-note">龍角散草本潤喉糖 · 合利他命 EX PLUS · LOXONIN S · EVE A · 感冒藥 · 鼻噴劑</div>
+      </div>
+    </div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🦶</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">修足時間顆粒版（Scholl）</div>
+        <div class="sheet-item-note">足部去角質泡腳顆粒</div>
+        <details style="margin-top:4px;">
+          <summary style="font-size:.68rem;color:var(--coral);font-weight:600;cursor:pointer;list-style:none;">看圖 ▾</summary>
+          <img src="https://d1git0hj90x82c.cloudfront.net/gazou/products/4903301138471/4903301138471%20_01.jpg" alt="修足時間顆粒版" style="max-width:100%;border-radius:var(--r-sm);margin-top:6px;display:block;">
+        </details>
+      </div>
+    </div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🧳</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">130L 行李袋</div>
+        <div class="sheet-item-note">Threads 強推，回程裝戰利品</div>
+      </div>
+    </div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🍫</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">零食</div>
+        <div class="sheet-item-note">野菜天婦羅 · 生蛋醬油拌飯醬 · じゃがりこ大阪限定 · 柿の種</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Day 5 採買清單 -->
+<div class="shop-sheet" id="shop-d5" role="dialog" aria-modal="true" aria-labelledby="sheet-title-d5">
+  <div class="shop-sheet-handle"></div>
+  <div class="shop-sheet-header">
+    <h2 class="shop-sheet-title" id="sheet-title-d5">Day 5｜梅田主力採買</h2>
+    <button class="shop-sheet-close" aria-label="關閉">✕</button>
+  </div>
+  <div class="shop-sheet-body">
+    <div class="sheet-note">⏰ 13:30 開始，最晚 16:15 收手 → 17:00 鴨蔥拉麵</div>
+    <p class="sheet-section-title" style="margin-top:var(--space-md)">🛍️ 採買順序</p>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🧀</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">Drooly 蜂蜜起司餅乾</div>
+        <div class="sheet-item-note">13:30 阪急梅田 B1，預計排隊 20–30 分 · <a href="https://maps.google.com/?q=Drooly+阪急梅田" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;">地圖 ↗</a></div>
+      </div>
+    </div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🥔</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">Grand Calbee 厚切洋芋片</div>
+        <div class="sheet-item-note">阪急梅田同棟，Drooly 排完順走 · <a href="https://maps.google.com/?q=グランカルビー+梅田" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;">地圖 ↗</a></div>
+      </div>
+    </div>
+    <div class="sheet-item">
+      <span class="sheet-item-icon">🍵</span>
+      <div class="sheet-item-body">
+        <div class="sheet-item-name">Henri Charpentier 試吃</div>
+        <div class="sheet-item-note">14:30 百貨地下，KIX 已買，看限定口味再決定加購 · <a href="https://maps.google.com/?q=Henri+Charpentier+梅田" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;">地圖 ↗</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Day 6 KIX 取貨 -->
+<div class="shop-sheet" id="shop-d6" role="dialog" aria-modal="true" aria-labelledby="sheet-title-d6">
+  <div class="shop-sheet-handle"></div>
+  <div class="shop-sheet-header">
+    <h2 class="shop-sheet-title" id="sheet-title-d6">Day 6｜KIX 線上購物車取貨</h2>
+    <button class="shop-sheet-close" aria-label="關閉">✕</button>
+  </div>
+  <div class="shop-sheet-body">
+    <div class="sheet-note">📍 T1 出境後直營店取貨，介面顯示 11 件（9 商品 + 2 贈品）&ensp;<a href="https://www.kixdutyfree.jp/tw/cart/" target="_blank" rel="noopener noreferrer" style="color:var(--coral);font-weight:600;white-space:nowrap;">查看購物車 ↗</a></div>
+    <p class="sheet-section-title" style="margin-top:var(--space-md)">🛒 已付款商品（9 件 ¥13,125）</p>
+    <div class="sheet-item"><span class="sheet-item-icon">🍵</span><div class="sheet-item-body"><div class="sheet-item-name">抹茶費南雪 8入 — Henri Charpentier</div><div class="sheet-item-note">¥2,000</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🍌</span><div class="sheet-item-body"><div class="sheet-item-name">東京香蕉蛋糕 經典原味 8入（免稅限定）</div><div class="sheet-item-note">¥1,300</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🍫</span><div class="sheet-item-body"><div class="sheet-item-name">KitKat 大阪城限定（櫻花）10片</div><div class="sheet-item-note">¥1,200</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🍫</span><div class="sheet-item-body"><div class="sheet-item-name">ROYCE 生巧克力 牛奶味</div><div class="sheet-item-note">¥1,125</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🍓</span><div class="sheet-item-body"><div class="sheet-item-name">神戶草莓松露（抹茶）— Frantz</div><div class="sheet-item-note">¥1,200</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🍪</span><div class="sheet-item-body"><div class="sheet-item-name">LeTAO 紅茶巧克力餅乾 9入</div><div class="sheet-item-note">¥1,200</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🧀</span><div class="sheet-item-body"><div class="sheet-item-name">Tokyo Milk Cheese 蜂蜜＆戈貢左拉芝士餅乾 9片</div><div class="sheet-item-note">¥1,200</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🍰</span><div class="sheet-item-body"><div class="sheet-item-name">築地千歲 抹茶蛋糕捲</div><div class="sheet-item-note">¥2,400</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">🍫</span><div class="sheet-item-body"><div class="sheet-item-name">KitKat 多樣化組合 機場限定 9枚入</div><div class="sheet-item-note">¥1,500</div></div></div>
+    <p class="sheet-section-title">🎁 系統贈品（2 件，免費）</p>
+    <div class="sheet-item"><span class="sheet-item-icon">🎁</span><div class="sheet-item-body"><div class="sheet-item-name">KitKat 壽司回彈車 ×1</div><div class="sheet-item-note">KitKat 滿 ¥1,500 自動觸發</div></div></div>
+    <div class="sheet-item"><span class="sheet-item-icon">❄️</span><div class="sheet-item-body"><div class="sheet-item-name">ROYCE 保冷劑＋保冷袋</div><div class="sheet-item-note">ROYCE 生巧克力預約取貨贈送</div></div></div>
+    <div class="sheet-note" style="margin-top:var(--space-sm)">👀 東京芭娜娜巧克力蛋糕 ¥2,800（線上缺貨）— 現場碰運氣</div>
+  </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>

@@ -329,6 +329,7 @@ test.describe('觸控目標 – 全部 button (390px)', () => {
     const btns = await page.locator('button').evaluateAll(els =>
       els
         .filter(el => el.getBoundingClientRect().height > 0)
+        .filter(el => !el.classList.contains('day-chip-shop')) // 採買清單 chip 視覺需與同排 chip 等高，例外豁免
         .map(el => ({
           label: (el.textContent?.trim().slice(0, 20) || el.id || '(no label)'),
           h: el.getBoundingClientRect().height,
